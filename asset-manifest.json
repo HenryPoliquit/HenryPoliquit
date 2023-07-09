@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/HenryPoliquit/static/css/main.8a84b12a.css",
+    "main.js": "/HenryPoliquit/static/js/main.b13c2744.js",
+    "static/media/project-bg.svg": "/HenryPoliquit/static/media/project-bg.df01a7ac1dcc2026bce6.svg",
+    "static/media/profile.png": "/HenryPoliquit/static/media/profile.6a82f845a22e518957ea.png",
+    "static/media/home-bg.svg": "/HenryPoliquit/static/media/home-bg.99f6f9cb3d55971050aa.svg",
+    "static/media/dynamic.png": "/HenryPoliquit/static/media/dynamic.86e0535558c6913bdd1a.png",
+    "static/media/simple.png": "/HenryPoliquit/static/media/simple.609f6c31277899a43175.png",
+    "static/media/unique.png": "/HenryPoliquit/static/media/unique.83a80e0d01613499c909.png",
+    "static/media/responsive.png": "/HenryPoliquit/static/media/responsive.95a53a041eac457045cd.png",
+    "static/media/slick.svg": "/HenryPoliquit/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/HenryPoliquit/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/HenryPoliquit/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/HenryPoliquit/static/media/slick.295183786cd8a1389865.woff",
+    "index.html": "/HenryPoliquit/index.html",
+    "main.8a84b12a.css.map": "/HenryPoliquit/static/css/main.8a84b12a.css.map",
+    "main.b13c2744.js.map": "/HenryPoliquit/static/js/main.b13c2744.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8a84b12a.css",
+    "static/js/main.b13c2744.js"
+  ]
+}
