@@ -58,8 +58,8 @@ const Contact = () => {
                     </div>
                 </ScrollAnimation>
                 <ScrollAnimation animateIn="animate__fadeInLeft" animateOnce={true}>
-                    <div className="wrap mt-2">
-                        <h2 className="text-dark text-center mb-2">Contact Number</h2>
+                    <h2 className="text-dark text-center mt-2 mb-2">Contact Number</h2>
+                    <div className="wrap">
                         <h4 className="text-dark">
                             +639158171758
                         </h4>
