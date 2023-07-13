@@ -57,6 +57,13 @@ const Contact = () => {
                         </a>
                     </div>
                 </ScrollAnimation>
+                <ScrollAnimation animateIn="animate__fadeInLeft" animateOnce={true}>
+                    <div className="wrap mt-2">
+                        <h4 className="text-dark">
+                            +639158171758
+                        </h4>
+                    </div>
+                </ScrollAnimation>
             </div>
         </main>
     )
