@@ -1,6 +1,6 @@
 <template>
     <v-card class="project-card hover-lift" height="100%">
-        <v-img :src="project.image" height="250" cover class="project-image">
+        <v-img :src="project.image" :alt="project.title" height="250" cover class="project-image">
             <template v-slot:default>
                 <div v-if="project.liveUrl" class="live-badge-wrapper">
                     <v-chip

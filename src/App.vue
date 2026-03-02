@@ -1,9 +1,11 @@
 <template>
   <v-app>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
     <!-- Cursor glow follows mouse — hidden on touch/reduced-motion -->
     <div class="cursor-glow" :style="glowStyle" aria-hidden="true"></div>
 
-    <v-layout>
+    <v-layout id="main-content">
       <Navbar />
       <router-view v-slot="{ Component }">
         <Transition name="page" mode="out-in">
@@ -14,6 +16,8 @@
       </router-view>
       <Footer />
     </v-layout>
+
+    <BackToTop />
 
     <!-- Global snackbar — all store.showSnackbar() calls render here -->
     <v-snackbar
@@ -38,6 +42,7 @@ import { reactive, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
+import BackToTop from './components/common/BackToTop.vue'
 import './assets/style.css'
 import { usePortfolioStore } from './stores/portfolio'
 import { useEasterEggs } from './composables/useEasterEggs'
@@ -45,11 +50,15 @@ import { useEasterEggs } from './composables/useEasterEggs'
 const store = usePortfolioStore()
 useEasterEggs()
 
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
 // ── Time-based welcome greeting on first load ─────────────────────────────
 onMounted(() => {
     setTimeout(() => {
         const h = new Date().getHours()
-        const greeting = h < 12 ? '☀️ Good morning!' : h < 18 ? '🌤️ Good afternoon!' : '🌙 Good evening!'
+        const greeting = prefersReducedMotion
+            ? h < 12 ? 'Good morning!' : h < 18 ? 'Good afternoon!' : 'Good evening!'
+            : h < 12 ? '☀️ Good morning!' : h < 18 ? '🌤️ Good afternoon!' : '🌙 Good evening!'
         store.showSnackbar(`${greeting} Welcome to my portfolio.`, 'primary', 'mdi-human-greeting')
     }, 1500)
 })
@@ -116,5 +125,23 @@ onUnmounted(() => window.removeEventListener('mousemove', onMouseMove))
 @media (prefers-reduced-motion: reduce),
        (hover: none) {
     .cursor-glow { display: none; }
+}
+
+/* ── Skip-to-content ── */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 8px;
+    z-index: 9999;
+    padding: 8px 16px;
+    background: #00BCD4;
+    color: #2C3E50;
+    font-weight: 700;
+    border-radius: 0 0 4px 4px;
+    text-decoration: none;
+    transition: top 0.2s;
+}
+.skip-link:focus {
+    top: 0;
 }
 </style>

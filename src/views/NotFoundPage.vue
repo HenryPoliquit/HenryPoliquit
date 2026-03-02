@@ -16,6 +16,17 @@
     </v-main>
 </template>
 
+<script setup>
+import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+onMounted(() => {
+    console.warn('[404]', route.fullPath)
+})
+</script>
+
 <style scoped>
 .not-found-wrapper {
     min-height: calc(100vh - 72px);

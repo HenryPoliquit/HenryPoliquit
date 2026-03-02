@@ -50,11 +50,11 @@
                     block
                     size="large"
                     :loading="submitting"
-                    :disabled="!formValid"
+                    :disabled="!formValid || cooldown"
                     class="mt-2"
                 >
                     <v-icon icon="mdi-send" start></v-icon>
-                    Send Message
+                    {{ cooldown ? `Wait ${cooldownSeconds}s…` : 'Send Message' }}
                 </v-btn>
             </v-form>
         </v-card-text>
@@ -64,7 +64,7 @@
 <script setup>
 import { useContactForm } from '../../composables/useContactForm'
 
-const { form, formValid, submitting, rules, contactFormRef, handleSubmit } = useContactForm()
+const { form, formValid, submitting, cooldown, cooldownSeconds, rules, contactFormRef, handleSubmit } = useContactForm()
 </script>
 
 <style scoped>

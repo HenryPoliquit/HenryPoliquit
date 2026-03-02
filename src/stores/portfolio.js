@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const usePortfolioStore = defineStore('portfolio', () => {
@@ -26,9 +26,9 @@ export const usePortfolioStore = defineStore('portfolio', () => {
         { name: 'GitHub', icon: 'mdi-github', url: 'https://github.com/HenryPoliquit' },
     ]
 
-    // Computed once at store init — updates each page load
-    const yearsLearning = Math.floor(
-        (Date.now() - new Date('2022-09-01').getTime()) / (365.25 * 24 * 60 * 60 * 1000)
+    // Reactive computed — stays accurate if the page is open across a year boundary
+    const yearsLearning = computed(() =>
+        Math.floor((Date.now() - new Date('2022-09-01').getTime()) / (365.25 * 24 * 60 * 60 * 1000))
     )
 
     const features = [
@@ -111,10 +111,12 @@ export const usePortfolioStore = defineStore('portfolio', () => {
         },
     ]
 
+    const techCount = new Set(projects.flatMap(p => p.technologies)).size
+
     const stats = [
         { number: `${projects.length}+`, label: 'Projects' },
-        { number: '8+', label: 'Technologies' },
-        { number: `${yearsLearning}+`, label: 'Years Learning' },
+        { number: `${techCount}+`, label: 'Technologies' },
+        { number: `${yearsLearning.value}+`, label: 'Years Learning' },
         { number: '100%', label: 'Dedicated' },
     ]
 

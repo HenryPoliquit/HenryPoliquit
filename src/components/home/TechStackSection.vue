@@ -5,6 +5,12 @@
             <h2 class="text-h5 text-sm-h4 font-weight-bold text-white">Technologies &amp; Tools</h2>
         </v-container>
 
+        <!-- Visually hidden tech list for screen readers (marquees are aria-hidden) -->
+        <ul class="sr-only">
+            <li v-for="tech in row1" :key="tech">{{ tech }}</li>
+            <li v-for="tech in row2" :key="tech">{{ tech }}</li>
+        </ul>
+
         <!-- Row 1: scrolls left -->
         <div class="marquee-wrapper mb-3" aria-hidden="true">
             <div class="marquee-fade-left"></div>
@@ -124,5 +130,18 @@ const row2Double = [...row2, ...row2]
 .marquee-fade-right {
     right: 0;
     background: linear-gradient(to left, #1A252F 20%, transparent);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+    list-style: none;
 }
 </style>

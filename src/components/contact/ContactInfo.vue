@@ -88,6 +88,19 @@
                 </v-tooltip>
             </div>
 
+            <!-- Download Resume (links to LinkedIn profile since no PDF is hosted) -->
+            <div class="text-center mb-4">
+                <v-btn
+                    :href="store.socialLinks.find(l => l.name === 'LinkedIn')?.url"
+                    target="_blank"
+                    color="primary"
+                    variant="outlined"
+                    prepend-icon="mdi-download"
+                >
+                    View Resume
+                </v-btn>
+            </div>
+
             <div class="text-center">
                 <v-chip color="success" variant="tonal" size="large">
                     <v-icon icon="mdi-clock-fast" start></v-icon>

@@ -12,6 +12,7 @@
                     <v-col cols="12" md="5" class="image-col">
                         <v-img
                             :src="featured.image"
+                            :alt="featured.title"
                             height="100%"
                             min-height="340"
                             cover
