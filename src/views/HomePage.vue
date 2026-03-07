@@ -14,6 +14,6 @@ import FeaturedWork from '../components/home/FeaturedWork.vue'
 
 <style scoped>
 .home-page {
-    background: #0F1419;
+    background: #090E1A;
 }
 </style>

@@ -28,7 +28,7 @@ export function useEasterEggs() {
             )
             console.log(
                 '%c🎮 Konami Code activated! Nice moves.',
-                'color:#00BCD4;font-size:14px;font-weight:bold;'
+                'color:#6272F5;font-size:14px;font-weight:bold;'
             )
             console.log(
                 '%cType window.portfolio to explore the site data.',
