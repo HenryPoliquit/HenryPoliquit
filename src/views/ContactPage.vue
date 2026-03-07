@@ -1,7 +1,7 @@
 <template>
     <v-main>
         <v-container class="section-spacing">
-            <SectionHeader title="GET IN TOUCH" subtitle="Have a project in mind? Let's work together!" />
+            <SectionHeader title="Let's build something" label="04 — CONTACT" subtitle="Have a project in mind? I'd love to hear about it." />
             <v-row>
                 <v-col cols="12" md="7">
                     <ContactForm />
