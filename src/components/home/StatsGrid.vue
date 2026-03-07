@@ -3,10 +3,10 @@
         <v-row justify="center" class="stats-section">
             <v-col cols="6" sm="3" v-for="stat in stats" :key="stat.label">
                 <div class="stat-card">
-                    <div class="stat-number text-accent text-h4 font-weight-bold">
+                    <div class="stat-number text-h4 font-weight-bold">
                         {{ displayValues[stat.label] }}
                     </div>
-                    <div class="stat-label text-white text-body-2 stat-opacity">{{ stat.label }}</div>
+                    <div class="stat-label text-body-2">{{ stat.label }}</div>
                 </div>
             </v-col>
         </v-row>
@@ -68,21 +68,26 @@ onMounted(() => {
 }
 
 .stat-card {
-    padding: 20px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 188, 212, 0.1);
-    transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+    padding: 20px 16px;
+    border-radius: 14px;
+    background: rgb(var(--v-theme-surface));
+    border: 1px solid rgb(var(--v-theme-surface-variant));
+    transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
 }
 
 .stat-card:hover {
-    background: rgba(0, 188, 212, 0.1);
-    border-color: rgba(0, 188, 212, 0.35);
-    transform: translateY(-5px);
+    background: rgb(var(--v-theme-surface-variant));
+    border-color: rgb(var(--v-theme-accent));
+    transform: translateY(-4px);
 }
 
-.stat-opacity {
-    opacity: 0.8;
+.stat-number {
+    color: rgb(var(--v-theme-accent)) !important;
+    font-family: 'Syne', sans-serif;
+}
+
+.stat-label {
+    color: rgb(var(--v-theme-on-surface-variant)) !important;
+    font-family: 'DM Sans', sans-serif;
 }
 </style>

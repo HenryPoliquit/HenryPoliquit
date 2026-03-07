@@ -5,18 +5,21 @@ import router from './router'
 import vuetify from './plugins/vuetify'
 import { usePortfolioStore } from './stores/portfolio'
 import emailjs from '@emailjs/browser'
+import '@fontsource/lora/400.css'
+import '@fontsource/lora/400-italic.css'
+import '@fontsource/lora/700.css'
 
 emailjs.init('g-_jWuDvabBx7rRAh')
 
 // ── Developer Easter Egg: Styled Console Banner ────────────────────────────
 console.log(
     '%cPaul Henry Poliquit%c  Full-Stack Developer',
-    'background:#00BCD4;color:#2C3E50;font-size:16px;font-weight:bold;padding:6px 12px;border-radius:6px 0 0 6px;',
-    'background:#2C3E50;color:#fff;font-size:16px;padding:6px 12px;border-radius:0 6px 6px 0;'
+    'background:#D4890A;color:#1C1A18;font-size:16px;font-weight:bold;padding:6px 12px;border-radius:6px 0 0 6px;',
+    'background:#1C1A18;color:#F5F0E8;font-size:16px;padding:6px 12px;border-radius:0 6px 6px 0;'
 )
 console.log(
     '%c👋 Hey there, curious dev! Try: window.portfolio',
-    'color:#00BCD4;font-size:12px;font-style:italic;'
+    'color:#D4890A;font-size:12px;font-style:italic;'
 )
 // ──────────────────────────────────────────────────────────────────────────
 

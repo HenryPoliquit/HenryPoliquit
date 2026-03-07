@@ -1,4 +1,4 @@
-/* Global Styles - Modern Tech Theme */
+/* Global Styles — Editorial Warmth */
 
 * {
   margin: 0;
@@ -7,94 +7,156 @@
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Lora', Georgia, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth scrolling */
+/* DM Sans for UI elements — applied by Vuetify component defaults */
+.ui-font {
+  font-family: 'DM Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Syne', sans-serif;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
-/* Remove text decoration from all links */
 a {
   text-decoration: none !important;
 }
 
-/* Custom scrollbar - Modern Tech style */
+/* ── Custom scrollbar ── */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #ECEFF1;
+  background: rgb(var(--v-theme-background));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #2C3E50 0%, #00BCD4 100%);
-  border-radius: 6px;
+  background: rgb(var(--v-theme-accent));
+  border-radius: 4px;
+  opacity: 0.6;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #1A252F 0%, #0097A7 100%);
+  background: rgb(var(--v-theme-primary));
 }
 
-/* Utility classes */
+/* ── Grain texture overlay ── */
+/* Applied as a fixed pseudo-element via .grain-overlay in App.vue */
+.grain-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}
+
+/* ── Section divider motif ── */
+.section-rule {
+  border: none;
+  border-top: 1px solid rgb(var(--v-theme-surface-variant));
+  margin: 0;
+}
+
+/* ── Section label style: "01 — TITLE" ── */
+.section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgb(var(--v-theme-accent));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  max-width: 48px;
+  height: 1px;
+  background: rgb(var(--v-theme-accent));
+  opacity: 0.5;
+}
+
+/* ── Lora italic pull quote ── */
+.pull-quote {
+  font-family: 'Lora', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  line-height: 1.8;
+  color: rgb(var(--v-theme-on-surface));
+  opacity: 0.85;
+}
+
+/* ── Amber text gradient ── */
 .text-gradient {
-  background: linear-gradient(135deg, #00BCD4 0%, #4DD0E1 100%);
+  background: linear-gradient(135deg, #D4890A 0%, #F0A832 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+/* ── Hover lift ── */
 .hover-lift {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hover-lift:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(0, 188, 212, 0.3) !important;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(212, 137, 10, 0.18) !important;
 }
 
+/* ── Fade-in animation ── */
 .fade-in {
-  animation: fadeIn 0.6s ease-in;
+  animation: fadeIn 0.6s ease-in both;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(16px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Section spacing */
+/* ── Section spacing ── */
 .section-spacing {
   padding: 80px 0;
 }
 
 @media (max-width: 960px) {
-  .section-spacing {
-    padding: 60px 0;
-  }
+  .section-spacing { padding: 60px 0; }
 }
 
 @media (max-width: 600px) {
-  .section-spacing {
-    padding: 40px 0;
-  }
+  .section-spacing { padding: 40px 0; }
 }
 
-/* Image shimmer — shared by ProjectCard and FeaturedWork */
+/* ── Image shimmer (shared by ProjectCard and FeaturedWork) ── */
 .img-shimmer {
   height: 100%;
   width: 100%;
-  background: linear-gradient(90deg, #1E2C3A 25%, #2C3E50 50%, #1E2C3A 75%);
+  background: linear-gradient(
+    90deg,
+    rgb(var(--v-theme-surface)) 25%,
+    rgb(var(--v-theme-surface-variant)) 50%,
+    rgb(var(--v-theme-surface)) 75%
+  );
   background-size: 400% 100%;
   animation: imgShimmer 1.5s infinite linear;
 }
@@ -106,17 +168,5 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .img-shimmer { animation: none; }
-}
-
-/* Modern Tech Gradient Backgrounds */
-.bg-gradient-primary {
-  background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
-}
-
-.bg-gradient-accent {
-  background: linear-gradient(135deg, #00BCD4 0%, #4DD0E1 100%);
-}
-
-.bg-gradient-dark {
-  background: linear-gradient(135deg, #1A252F 0%, #2C3E50 100%);
+  .fade-in { animation: none; }
 }

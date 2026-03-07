@@ -1,7 +1,7 @@
 <template>
-    <v-main>
+    <v-main class="contact-page">
         <v-container class="section-spacing">
-            <SectionHeader title="GET IN TOUCH" subtitle="Have a project in mind? Let's work together!" />
+            <SectionHeader title="Let's build something" label="04 — CONTACT" subtitle="Have a project in mind? I'd love to hear about it." />
             <v-row>
                 <v-col cols="12" md="7">
                     <ContactForm />
@@ -19,3 +19,10 @@ import SectionHeader from '../components/common/SectionHeader.vue'
 import ContactForm from '../components/contact/ContactForm.vue'
 import ContactInfo from '../components/contact/ContactInfo.vue'
 </script>
+
+<style scoped>
+.contact-page {
+    background: rgb(var(--v-theme-background));
+    min-height: calc(100vh - 72px);
+}
+</style>

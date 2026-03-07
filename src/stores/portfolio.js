@@ -6,7 +6,7 @@ export const usePortfolioStore = defineStore('portfolio', () => {
         name: 'Paul Henry V. Poliquit',
         title: 'Full-Stack Developer | Cloud Enthusiast',
         bio: 'Software Engineering student at Lithan EduClaaS specializing in modern web development and cloud technologies. Experienced in building scalable full-stack applications using Vue.js ecosystem and Google Cloud Platform, with emphasis on clean architecture and performance optimization.',
-        avatarUrl: 'https://ui-avatars.com/api/?name=Paul+Henry+Poliquit&size=120&background=00BCD4&color=2C3E50&bold=true',
+        avatarUrl: '/HenryPoliquit/profile.jpg',
         email: 'paulpoliquit@gmail.com',
         phone: '+639158171758',
         location: 'Philippines',
@@ -71,7 +71,7 @@ export const usePortfolioStore = defineStore('portfolio', () => {
     const projects = [
         {
             title: 'CompareIP.sg',
-            description: 'A Singapore-based full-stack platform for comparing Integrated Shield Plan (IP) insurance premiums. Features plan comparison, premium mapping, and personalised profiles for consumers, with a HitPay-powered subscription tier for Financial Agents. Backend runs on Cloud Run with Fastify, backed by Cloud SQL PostgreSQL and exposed via GCP API Gateway.',
+            description: 'Production platform serving Singapore\'s insurance market — a full-stack app for comparing Integrated Shield Plan (IP) premiums. Features plan comparison, premium mapping, and personalised profiles for consumers, with a HitPay-powered subscription tier for Financial Agents. Backend runs on Cloud Run with Fastify, backed by Cloud SQL PostgreSQL and exposed via GCP API Gateway.',
             image: 'https://1drv.ms/i/c/d84592b03776f086/IQR6rE8dp2fCTY3Nk45a51-WATlBMFWNC3kNiCxbI8hW5GI?width=660',
             technologies: ['Vue 3', 'Vuetify 3', 'Fastify', 'Cloud Run', 'Cloud SQL', 'PostgreSQL', 'Firebase', 'API Gateway', 'HitPay'],
             liveUrl: 'https://compareip.sg/',
@@ -117,7 +117,7 @@ export const usePortfolioStore = defineStore('portfolio', () => {
         { number: `${projects.length}+`, label: 'Projects' },
         { number: `${techCount}+`, label: 'Technologies' },
         { number: `${yearsLearning.value}+`, label: 'Years Learning' },
-        { number: '100%', label: 'Dedicated' },
+        { number: '1', label: 'Production App' },
     ]
 
     // Preload all project images as soon as the store is initialised.
