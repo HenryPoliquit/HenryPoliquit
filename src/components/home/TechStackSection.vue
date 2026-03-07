@@ -2,7 +2,7 @@
     <section class="tech-section">
         <v-container class="text-center pt-10 pt-sm-16 pb-6 pb-sm-10">
             <p class="text-overline text-accent mb-2" style="letter-spacing: 4px;">WHAT I USE</p>
-            <h2 class="text-h5 text-sm-h4 font-weight-bold text-white">Technologies &amp; Tools</h2>
+            <h2 class="text-h5 text-sm-h4 font-weight-bold">Technologies &amp; Tools</h2>
         </v-container>
 
         <!-- Visually hidden tech list for screen readers (marquees are aria-hidden) -->
@@ -49,7 +49,7 @@ const row2Double = [...row2, ...row2]
 
 <style scoped>
 .tech-section {
-    background: #1A252F;
+    background: rgb(var(--v-theme-surface));
     overflow: hidden;
 }
 
@@ -87,9 +87,9 @@ const row2Double = [...row2, ...row2]
     align-items: center;
     padding: 8px 20px;
     border-radius: 999px;
-    background: rgba(0, 188, 212, 0.07);
-    border: 1px solid rgba(0, 188, 212, 0.22);
-    color: rgba(255, 255, 255, 0.8);
+    background: rgba(212, 137, 10, 0.07);
+    border: 1px solid rgba(212, 137, 10, 0.22);
+    color: rgb(var(--v-theme-on-surface));
     font-size: 0.875rem;
     font-weight: 500;
     white-space: nowrap;
@@ -98,9 +98,9 @@ const row2Double = [...row2, ...row2]
 }
 
 .tech-chip:hover {
-    background: rgba(0, 188, 212, 0.18);
-    border-color: rgba(0, 188, 212, 0.55);
-    color: #fff;
+    background: rgba(212, 137, 10, 0.16);
+    border-color: rgba(212, 137, 10, 0.5);
+    color: rgb(var(--v-theme-on-surface));
 }
 
 .marquee-fade-left,
@@ -124,12 +124,12 @@ const row2Double = [...row2, ...row2]
 
 .marquee-fade-left {
     left: 0;
-    background: linear-gradient(to right, #1A252F 20%, transparent);
+    background: linear-gradient(to right, rgb(var(--v-theme-surface)) 20%, transparent);
 }
 
 .marquee-fade-right {
     right: 0;
-    background: linear-gradient(to left, #1A252F 20%, transparent);
+    background: linear-gradient(to left, rgb(var(--v-theme-surface)) 20%, transparent);
 }
 
 .sr-only {
