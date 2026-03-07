@@ -10,6 +10,12 @@
     </v-main>
 </template>
 
+<style scoped>
+:deep(.v-main) {
+    background: rgb(var(--v-theme-background)) !important;
+}
+</style>
+
 <script setup>
 import SectionHeader from '../components/common/SectionHeader.vue'
 import ProfileCard from '../components/about/ProfileCard.vue'

@@ -1,7 +1,7 @@
 <template>
     <v-card class="contact-info-card fade-in" style="animation-delay: 0.2s" elevation="4">
-        <v-card-title class="text-h5 font-weight-bold pa-6 bg-secondary text-white">
-            <v-icon icon="mdi-information" start></v-icon>
+        <v-card-title class="info-card-title pa-6">
+            <v-icon icon="mdi-information" start color="accent"></v-icon>
             Contact Information
         </v-card-title>
         <v-card-text class="pa-6">
@@ -129,6 +129,16 @@ async function copyToClipboard(text, label) {
 <style scoped>
 .contact-info-card {
     height: 100%;
+    background: rgb(var(--v-theme-surface));
+    border: 1px solid rgb(var(--v-theme-surface-variant));
+}
+
+.info-card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: rgb(var(--v-theme-on-surface));
+    border-bottom: 1px solid rgb(var(--v-theme-surface-variant));
 }
 
 .contact-item {

@@ -1,23 +1,26 @@
 <template>
     <v-main class="projects-page">
         <v-container class="section-spacing">
-            <SectionHeader title="PROJECTS" subtitle="What I've been building" :dark="true" />
+            <SectionHeader title="Projects" label="03 — WORK" subtitle="What I've been building." />
 
-            <!-- Tech filter -->
-            <v-select
-                v-model="selectedTechs"
-                :items="allTechnologies"
-                label="Filter by technology"
-                multiple
-                clearable
-                chips
-                closable-chips
-                density="comfortable"
-                variant="outlined"
-                color="accent"
-                class="mb-6 filter-select"
-                hide-details
-            ></v-select>
+            <!-- Warm pill filter -->
+            <div class="filter-bar mb-8">
+                <span class="filter-label">Filter:</span>
+                <div class="filter-pills">
+                    <button
+                        class="filter-pill"
+                        :class="{ active: selectedTechs.length === 0 }"
+                        @click="selectedTechs = []"
+                    >All</button>
+                    <button
+                        v-for="tech in allTechnologies"
+                        :key="tech"
+                        class="filter-pill"
+                        :class="{ active: selectedTechs.includes(tech) }"
+                        @click="toggleTech(tech)"
+                    >{{ tech }}</button>
+                </div>
+            </div>
 
             <v-row>
                 <v-col
@@ -26,15 +29,15 @@
                     cols="12"
                     md="6"
                     class="fade-in"
-                    :style="{ animationDelay: `${index * 0.1}s` }"
+                    :style="{ animationDelay: `${index * 0.08}s` }"
                 >
-                    <ProjectCard :project="project" />
+                    <ProjectCard :project="project" :index="index" />
                 </v-col>
             </v-row>
 
             <div v-if="filteredProjects.length === 0" class="text-center py-12">
-                <v-icon icon="mdi-filter-off" size="48" color="accent" class="mb-4" style="opacity:0.5"></v-icon>
-                <p class="text-white" style="opacity:0.6">No projects match the selected filters.</p>
+                <v-icon icon="mdi-filter-off" size="48" color="accent" class="mb-4" style="opacity:0.4"></v-icon>
+                <p class="no-results">No projects match the selected filters.</p>
             </div>
         </v-container>
     </v-main>
@@ -47,7 +50,6 @@ import SectionHeader from '../components/common/SectionHeader.vue'
 import ProjectCard from '../components/projects/ProjectCard.vue'
 
 const store = usePortfolioStore()
-
 const selectedTechs = ref([])
 
 const allTechnologies = computed(() =>
@@ -61,8 +63,15 @@ const filteredProjects = computed(() => {
     )
 })
 
-// Belt-and-suspenders preload: fire all image requests simultaneously on mount
-// Browser deduplicates in-flight requests — this guarantees parallel loading
+function toggleTech(tech) {
+    const idx = selectedTechs.value.indexOf(tech)
+    if (idx === -1) {
+        selectedTechs.value = [...selectedTechs.value, tech]
+    } else {
+        selectedTechs.value = selectedTechs.value.filter(t => t !== tech)
+    }
+}
+
 onMounted(() => {
     const cache = []
     store.projects.forEach(({ image }) => {
@@ -76,11 +85,60 @@ onMounted(() => {
 
 <style scoped>
 .projects-page {
-    background: linear-gradient(135deg, #34495E 0%, #2C3E50 100%);
+    background: rgb(var(--v-theme-background));
     min-height: calc(100vh - 72px);
 }
 
-.filter-select :deep(.v-field) {
-    background: rgba(255, 255, 255, 0.06);
+.filter-bar {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgb(var(--v-theme-on-surface-variant));
+    padding-top: 6px;
+    flex-shrink: 0;
+}
+
+.filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-pill {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 5px 16px;
+    border-radius: 99px;
+    background: rgb(var(--v-theme-surface));
+    border: 1px solid rgb(var(--v-theme-surface-variant));
+    color: rgb(var(--v-theme-on-surface));
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.filter-pill:hover {
+    border-color: rgb(var(--v-theme-accent));
+}
+
+.filter-pill.active {
+    background: rgb(var(--v-theme-accent));
+    border-color: rgb(var(--v-theme-accent));
+    color: rgb(var(--v-theme-on-accent));
+}
+
+.no-results {
+    font-family: 'Lora', Georgia, serif;
+    color: rgb(var(--v-theme-on-surface-variant));
+    font-style: italic;
 }
 </style>

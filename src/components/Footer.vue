@@ -1,5 +1,5 @@
 <template>
-    <v-footer app color="secondary" dark class="footer-enhanced">
+    <v-footer app color="surface" class="footer-enhanced">
         <v-container>
             <v-row class="py-6 py-md-8">
                 <!-- Brand Section -->
@@ -18,7 +18,7 @@
                             :href="social.url"
                             target="_blank"
                             variant="text"
-                            color="white"
+                            color="accent"
                             size="large"
                             class="social-btn"
                         ></v-btn>
@@ -59,7 +59,7 @@
                 </v-col>
             </v-row>
 
-            <v-divider class="my-4" color="white" opacity="0.2"></v-divider>
+            <v-divider class="my-4" color="surface-variant"></v-divider>
 
             <!-- Copyright -->
             <v-row>
@@ -86,19 +86,26 @@ const currentYear = computed(() => new Date().getFullYear())
 <style scoped>
 .footer-enhanced {
     margin-top: auto;
+    border-top: 1px solid rgb(var(--v-theme-surface-variant));
 }
 
 .social-btn {
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    transition: transform 0.25s ease;
 }
 
 .social-btn:hover {
-    transform: scale(1.1);
-    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.12);
 }
 
-.footer-link:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+.footer-link :deep(.v-list-item-title) {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: rgb(var(--v-theme-on-surface-variant));
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover :deep(.v-list-item-title) {
+    color: rgb(var(--v-theme-accent));
 }
 
 .contact-info {

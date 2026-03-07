@@ -1,16 +1,19 @@
 <template>
-    <v-main>
+    <v-main class="not-found-page">
         <div class="not-found-wrapper d-flex align-center justify-center">
             <div class="text-center px-4">
-                <h1 class="error-code text-gradient-cyan">404</h1>
-                <p class="text-h5 text-white font-weight-medium mb-2">Page not found</p>
-                <p class="text-body-1 mb-8" style="opacity: 0.6; color: white;">
-                    Looks like this route doesn't exist.
-                </p>
-                <v-btn color="accent" size="large" to="/" class="px-8 text-primary">
-                    <v-icon icon="mdi-home" start></v-icon>
-                    Back to Home
-                </v-btn>
+                <div class="error-bg-text" aria-hidden="true">404</div>
+                <div class="error-content">
+                    <p class="not-found-label mb-2">Page not found</p>
+                    <h1 class="not-found-heading mb-4">You've wandered off the map.</h1>
+                    <p class="not-found-desc mb-10">
+                        The page you're looking for doesn't exist, or has moved somewhere else.
+                    </p>
+                    <v-btn color="accent" size="large" to="/" class="px-10">
+                        <v-icon icon="mdi-home" start></v-icon>
+                        Back to Home
+                    </v-btn>
+                </div>
             </div>
         </div>
     </v-main>
@@ -28,19 +31,62 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.not-found-wrapper {
-    min-height: calc(100vh - 72px);
-    background: linear-gradient(135deg, #2C3E50 0%, #1A252F 100%);
+.not-found-page {
+    background: rgb(var(--v-theme-background));
 }
 
-.error-code {
-    font-size: clamp(6rem, 20vw, 12rem);
-    font-weight: 700;
+.not-found-wrapper {
+    min-height: calc(100vh - 72px);
+    position: relative;
+    overflow: hidden;
+}
+
+.error-bg-text {
+    position: absolute;
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(12rem, 30vw, 22rem);
+    font-weight: 800;
+    color: rgb(var(--v-theme-accent));
+    opacity: 0.04;
     line-height: 1;
-    margin-bottom: 16px;
-    background: linear-gradient(135deg, #00BCD4 0%, #4DD0E1 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    letter-spacing: -8px;
+    user-select: none;
+    pointer-events: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+}
+
+.error-content {
+    position: relative;
+    z-index: 1;
+}
+
+.not-found-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgb(var(--v-theme-accent));
+}
+
+.not-found-heading {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    color: rgb(var(--v-theme-on-background));
+    letter-spacing: -0.5px;
+}
+
+.not-found-desc {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: rgb(var(--v-theme-on-surface-variant));
+    max-width: 380px;
+    margin-inline: auto;
+    line-height: 1.75;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <v-card class="contact-card fade-in" elevation="8">
-        <v-card-title class="text-h5 font-weight-bold pa-6 bg-primary text-white">
-            <v-icon icon="mdi-email-edit" start></v-icon>
+        <v-card-title class="form-card-title pa-6">
+            <v-icon icon="mdi-email-edit" start color="accent"></v-icon>
             Send Me a Message
         </v-card-title>
         <v-card-text class="pa-6">
@@ -69,6 +69,15 @@ const { form, formValid, submitting, cooldown, cooldownSeconds, rules, contactFo
 
 <style scoped>
 .contact-card {
-    border-top: 4px solid #00BCD4;
+    border-top: 3px solid rgb(var(--v-theme-accent));
+    background: rgb(var(--v-theme-surface));
+}
+
+.form-card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: rgb(var(--v-theme-on-surface));
+    border-bottom: 1px solid rgb(var(--v-theme-surface-variant));
 }
 </style>
