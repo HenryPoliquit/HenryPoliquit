@@ -92,6 +92,11 @@
                 </v-col>
             </v-row>
         </v-container>
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator" aria-hidden="true">
+            <div class="scroll-track"><div class="scroll-thumb"></div></div>
+            <span class="scroll-text">scroll</span>
+        </div>
     </div>
 </template>
 
@@ -128,6 +133,19 @@ const { typewriterText, showCursor } = useTypewriter([
     height: 80%;
     background: radial-gradient(ellipse at center, rgba(212, 137, 10, 0.07) 0%, transparent 65%);
     pointer-events: none;
+}
+
+/* Editorial grid — subtle amber lines */
+.hero-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(212, 137, 10, 0.038) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212, 137, 10, 0.038) 1px, transparent 1px);
+    background-size: 64px 64px;
+    pointer-events: none;
+    z-index: 0;
 }
 
 .hero-section {
@@ -316,8 +334,64 @@ const { typewriterText, showCursor } = useTypewriter([
     .hero-section { padding: 40px 16px; }
 }
 
+/* ── Scroll indicator ── */
+.scroll-indicator {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.45;
+    animation: fadeIn 1s ease 1.2s both;
+    z-index: 2;
+}
+
+.scroll-track {
+    width: 1.5px;
+    height: 44px;
+    background: rgba(212, 137, 10, 0.25);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.scroll-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: rgb(var(--v-theme-accent));
+    border-radius: 2px;
+    animation: scrollThumb 1.8s ease-in-out infinite;
+}
+
+.scroll-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgb(var(--v-theme-accent));
+}
+
+@keyframes scrollThumb {
+    0%   { transform: translateY(-100%); opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { transform: translateY(350%); opacity: 0; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 1279px) {
+    .scroll-indicator { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .status-dot { animation: none; }
     .cursor-blink { animation: none; }
+    .scroll-indicator { display: none; }
 }
 </style>

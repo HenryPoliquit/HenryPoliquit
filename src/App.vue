@@ -54,7 +54,10 @@ const store = usePortfolioStore()
 const theme = useTheme()
 useEasterEggs()
 
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+// ── Hydrate content from Supabase (falls back to hardcoded defaults on failure) ──
+store.loadContent()
+store.fetchDiscoveryCount()
+store.subscribeDiscoveries()
 
 // ── Theme persistence ─────────────────────────────────────────────────────
 onMounted(() => {

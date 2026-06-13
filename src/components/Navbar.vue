@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <v-app-bar
         app
@@ -113,6 +114,7 @@ function handleLogoClick() {
     clearTimeout(logoTimer)
     if (logoClicks >= 5) {
         logoClicks = 0
+        store.recordDiscovery('logo')
         store.showSnackbar('Easter egg! Try the Konami Code: ↑↑↓↓←→←→BA', 'accent', 'mdi-star-shooting')
         console.log('%cEaster egg found! Now try: ↑↑↓↓←→←→BA', 'color:#D4890A;font-weight:bold;font-size:13px;')
     } else {

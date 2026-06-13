@@ -60,12 +60,15 @@
                     <v-icon icon="mdi-github" start></v-icon>
                     View Code
                 </v-btn>
+                <ProjectClaps v-if="project.id != null" :project-id="project.id" />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import ProjectClaps from './ProjectClaps.vue'
+
 defineProps({
     project: { type: Object, required: true },
     index: { type: Number, default: 0 },

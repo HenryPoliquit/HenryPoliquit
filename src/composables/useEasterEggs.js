@@ -21,6 +21,7 @@ export function useEasterEggs() {
 
         if (sequence.join(',') === KONAMI.join(',')) {
             sequence = []
+            store.recordDiscovery('konami')
             store.showSnackbar(
                 '🎮 Konami Code! You\'re one of us.',
                 'accent',

@@ -1,6 +1,6 @@
 <template>
     <section class="tech-section">
-        <v-container class="text-center pt-10 pt-sm-16 pb-6 pb-sm-10">
+        <v-container v-reveal class="text-center pt-10 pt-sm-16 pb-6 pb-sm-10">
             <p class="text-overline text-accent mb-2" style="letter-spacing: 4px;">WHAT I USE</p>
             <h2 class="text-h5 text-sm-h4 font-weight-bold">Technologies &amp; Tools</h2>
         </v-container>

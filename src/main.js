@@ -4,12 +4,9 @@ import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
 import { usePortfolioStore } from './stores/portfolio'
-import emailjs from '@emailjs/browser'
 import '@fontsource/lora/400.css'
 import '@fontsource/lora/400-italic.css'
 import '@fontsource/lora/700.css'
-
-emailjs.init('g-_jWuDvabBx7rRAh')
 
 // ── Developer Easter Egg: Styled Console Banner ────────────────────────────
 console.log(
@@ -29,6 +26,29 @@ const app = createApp(App)
 app.use(pinia)
 app.use(vuetify)
 app.use(router)
+
+// Scroll-reveal directive — fades elements in as they enter the viewport.
+// Usage: v-reveal or v-reveal="{ delay: 150 }"
+app.directive('reveal', {
+    mounted(el, binding) {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+        const delay = binding.value?.delay ?? 0
+        el.style.opacity = '0'
+        el.style.transform = 'translateY(24px)'
+        el.style.transition = `opacity 0.65s ease ${delay}ms, transform 0.65s ease ${delay}ms`
+        const obs = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    el.style.opacity = '1'
+                    el.style.transform = 'translateY(0)'
+                    obs.disconnect()
+                }
+            },
+            { threshold: 0.1 },
+        )
+        obs.observe(el)
+    },
+})
 
 app.mount('#app')
 

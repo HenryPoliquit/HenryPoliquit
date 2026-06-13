@@ -1,9 +1,7 @@
 import { ref } from 'vue'
-import emailjs from '@emailjs/browser'
+import { supabase } from '../lib/supabase'
 import { usePortfolioStore } from '../stores/portfolio'
 
-const SERVICE_ID  = 'service_05uptif'
-const TEMPLATE_ID = 'template_n4ib3bf'
 const COOLDOWN_DURATION = 30 // seconds
 
 export function useContactForm() {
@@ -50,12 +48,14 @@ export function useContactForm() {
         submitting.value = true
 
         try {
-            await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-                from_name:  form.value.name,
-                from_email: form.value.email,
-                subject:    form.value.subject,
-                message:    form.value.message,
+            const { error } = await supabase.from('messages').insert({
+                name:    form.value.name,
+                email:   form.value.email,
+                subject: form.value.subject,
+                message: form.value.message,
             })
+
+            if (error) throw error
 
             store.showSnackbar("Message sent! I'll get back to you soon. 📬", 'success', 'mdi-email-check')
             form.value = { name: '', email: '', subject: '', message: '' }

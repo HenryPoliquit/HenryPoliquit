@@ -5,7 +5,7 @@
             <div class="section-label mb-2">01 — SPOTLIGHT</div>
             <h2 class="section-title mb-10">Featured Work</h2>
 
-            <div class="featured-card">
+            <div v-reveal class="featured-card">
                 <v-row no-gutters align="stretch">
                     <!-- Image -->
                     <v-col cols="12" md="5" class="image-col">
