@@ -19,6 +19,7 @@ export function useContactForm() {
         email: '',
         subject: '',
         message: '',
+        website: '', // honeypot — real users never fill this
     })
 
     const rules = {
@@ -53,20 +54,24 @@ export function useContactForm() {
                 email:   form.value.email,
                 subject: form.value.subject,
                 message: form.value.message,
+                website: form.value.website,
             })
 
             if (error) throw error
 
             store.showSnackbar("Message sent! I'll get back to you soon. 📬", 'success', 'mdi-email-check')
-            form.value = { name: '', email: '', subject: '', message: '' }
+            form.value = { name: '', email: '', subject: '', message: '', website: '' }
             contactFormRef.value?.reset()
             startCooldown()
-        } catch {
+        } catch (err) {
             const isOffline = !navigator.onLine
-            const msg = isOffline
-                ? 'No internet connection — please check your network.'
-                : 'Failed to send — please email me directly.'
-            store.showSnackbar(msg, 'error', 'mdi-email-alert')
+            const isRateLimited = err?.code === 'PT429'
+            const msg = isRateLimited
+                ? 'Please wait a moment before sending another message.'
+                : isOffline
+                  ? 'No internet connection — please check your network.'
+                  : 'Failed to send — please email me directly.'
+            store.showSnackbar(msg, isRateLimited ? 'warning' : 'error', 'mdi-email-alert')
         } finally {
             submitting.value = false
         }

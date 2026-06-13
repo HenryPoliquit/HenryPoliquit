@@ -6,6 +6,19 @@
         </v-card-title>
         <v-card-text class="pa-6">
             <v-form ref="contactFormRef" v-model="formValid" @submit.prevent="handleSubmit">
+                <!-- Honeypot: hidden from humans, bots fill it and get silently dropped -->
+                <div class="hp-field" aria-hidden="true">
+                    <label for="hp-website">Website</label>
+                    <input
+                        id="hp-website"
+                        v-model="form.website"
+                        type="text"
+                        name="website"
+                        tabindex="-1"
+                        autocomplete="off"
+                    />
+                </div>
+
                 <v-text-field
                     v-model="form.name"
                     label="Your Name"
@@ -79,5 +92,14 @@ const { form, formValid, submitting, cooldown, cooldownSeconds, rules, contactFo
     font-weight: 700;
     color: rgb(var(--v-theme-on-surface));
     border-bottom: 1px solid rgb(var(--v-theme-surface-variant));
+}
+
+/* Honeypot — off-screen (not display:none, which some bots skip) */
+.hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 }
 </style>
