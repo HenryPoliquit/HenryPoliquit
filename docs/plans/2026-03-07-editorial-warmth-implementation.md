@@ -1,6 +1,5 @@
 # Editorial Warmth — Implementation Plan
 
-
 **Goal:** Redesign the entire portfolio with a warm, human, editorial aesthetic — light/dark mode, amber gold accent, Lora serif body, ditching cold indigo for warm surfaces throughout.
 
 **Architecture:** Two Vuetify named themes (`warmLight` / `warmDark`) replace the single theme. Theme toggle lives in Navbar, persists to localStorage. All hardcoded hex colors in components are replaced with Vuetify CSS custom property references (`rgb(var(--v-theme-*))`) so every component responds to theme switches automatically.
