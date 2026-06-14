@@ -75,7 +75,7 @@ function toggleTech(tech) {
 onMounted(() => {
     const cache = []
     store.projects.forEach(({ image }) => {
-        if (!image || image.includes('onedrive.live.com/embed')) return
+        if (!image) return
         const img = new Image()
         img.src = image
         cache.push(img)
