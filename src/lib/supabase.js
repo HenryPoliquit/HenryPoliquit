@@ -8,4 +8,4 @@ if (!url || !key) {
     console.warn('[supabase] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY — backend features disabled.')
 }
 
-export const supabase = createClient(url, key)
+export const supabase = createClient(url || 'http://localhost:54321', key || 'placeholder-anon-key')
