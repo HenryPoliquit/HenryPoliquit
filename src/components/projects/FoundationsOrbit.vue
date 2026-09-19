@@ -41,6 +41,7 @@
                 <div
                     ref="stage"
                     class="orbit-stage"
+                    :style="stageStyle"
                     role="group"
                     :aria-label="`${items.length} coursework projects, on a rotating carousel. Drag to spin, or tab through the cards.`"
                     @pointerdown="onDown"
@@ -119,21 +120,35 @@ function linkOf(p) {
 // Cards sit on a vertical-axis ring, evenly spaced, each turned to face out.
 // Radius is derived from the count so four cards and six cards both breathe:
 // r = (card + gap) / 2 / tan(pi / n).
-// Card width is a breakpoint away from the CSS, so the radius has to follow
-// it - deriving from 250 on a phone whose cards are 210 puts the neighbours
-// further out than the stage can show.
-const narrow = ref(false)
-const cardW = computed(() => (narrow.value ? 260 : 330))
-const gap = computed(() => (narrow.value ? 50 : 90))
+// Everything is measured off the stage rather than set at breakpoints. Card
+// width and radius used to live in the CSS and be re-declared here, which is
+// how the phone ended up with a desktop-sized radius.
+const stageW = ref(1100)
+
+const cardW = computed(() => Math.round(Math.min(460, Math.max(260, stageW.value * 0.40))))
+
+// Image is 16:9 and the body below it is a fixed stack of rules and type.
+const cardH = computed(() => Math.round((cardW.value * 9) / 16) + 190)
 
 const step = computed(() => 360 / Math.max(items.value.length, 1))
+
 const radius = computed(() => {
-    const n = Math.max(items.value.length, 2)
-    return Math.round((cardW.value + gap.value) / 2 / Math.tan(Math.PI / n))
+    // A card turned COUNTER_TURN of 90deg shows cos(45deg) of its width, so the
+    // ring reaches r + 0.354*card either side. Solve that against the stage so
+    // the orbit fills the band instead of hugging the middle of it.
+    const reach = stageW.value / 2 - 0.354 * cardW.value - 12
+    const min = cardW.value * 0.6 // closer than this and the cards collide
+    const max = cardW.value * 1.25 // further and the ring stops reading as one
+    return Math.round(Math.min(max, Math.max(min, reach)))
 })
+
+// Breathing room above and below the tallest card as it swings through.
+const stageStyle = computed(() => ({ height: `${cardH.value + 70}px` }))
 
 const angle = ref(0)
 const ringStyle = computed(() => ({
+    width: `${cardW.value}px`,
+    height: `${cardH.value}px`,
     transform: `translateZ(-${radius.value}px) rotateY(${angle.value}deg)`,
 }))
 
@@ -155,6 +170,8 @@ function cardStyle(i) {
     const signed = facing >= 180 ? facing - 360 : facing
     const depth = (Math.cos((facing * Math.PI) / 180) + 1) / 2 // 1 front, 0 back
     return {
+        width: `${cardW.value}px`,
+        height: `${cardH.value}px`,
         transform:
             `rotateY(${placed}deg) translateZ(${radius.value}px) ` +
             `rotateY(${(-signed * COUNTER_TURN).toFixed(2)}deg)`,
@@ -182,7 +199,7 @@ let velocity = 0
 let lastX = 0
 let dragDistance = 0
 let reduceQuery = null
-let narrowQuery = null
+let resizeObs = null
 
 const IDLE_SPEED = 0.07 // deg per frame, ~4 deg/s - a drift, not a spin
 
@@ -257,25 +274,26 @@ function applyMotionPreference() {
     }
 }
 
-function applyWidth() {
-    narrow.value = narrowQuery.matches
-}
-
 onMounted(() => {
     reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     applyMotionPreference()
     reduceQuery.addEventListener('change', applyMotionPreference)
 
-    // Matches the 600px breakpoint the card styles use below.
-    narrowQuery = window.matchMedia('(max-width: 600px)')
-    applyWidth()
-    narrowQuery.addEventListener('change', applyWidth)
+    if (stage.value) {
+        // Measure once synchronously so the first paint uses the real width;
+        // ResizeObserver only fires after it, which would cost a frame.
+        stageW.value = stage.value.clientWidth || stageW.value
+        resizeObs = new ResizeObserver(([entry]) => {
+            stageW.value = entry.contentRect.width
+        })
+        resizeObs.observe(stage.value)
+    }
 })
 
 onBeforeUnmount(() => {
     if (raf) cancelAnimationFrame(raf)
     reduceQuery?.removeEventListener('change', applyMotionPreference)
-    narrowQuery?.removeEventListener('change', applyWidth)
+    resizeObs?.disconnect()
 })
 </script>
 
@@ -368,16 +386,13 @@ onBeforeUnmount(() => {
     /* Sized to the ring it holds (card + 2r + air), not to the container -
        a full-width stage puts the mask far outside the cards, where it has
        nothing to fade. */
+    /* Fills the band. The ring is sized from this width, so the orbit grows
+       with the page instead of hugging the middle of it. */
     width: 100%;
-    /* The swing is card + 2r wide (330 + 420), so anything past ~770px is
-       dead space the mask never reaches. */
-    max-width: 770px;
-    /* Left, not centred: every other element in a band hangs off the same
-       left rule, and a centred island under a left-aligned label reads as
-       detached from the document. */
-    margin-inline: 0;
-    height: 440px;
-    perspective: 1150px;
+    /* Deep enough that the far cards are not crushed toward the middle:
+       a card at radius r sits r behind the screen plane, so it projects in by
+       P/(P+r). At 1150 that swallowed a third of the ring's width. */
+    perspective: 1400px;
     /* Horizontal drag is ours; vertical scroll stays the page's. */
     touch-action: pan-y;
     cursor: grab;
@@ -394,8 +409,6 @@ onBeforeUnmount(() => {
     position: absolute;
     inset: 0;
     margin: auto;
-    width: 330px;
-    height: 372px;
     transform-style: preserve-3d;
 }
 
@@ -433,8 +446,5 @@ onBeforeUnmount(() => {
 
 @media (max-width: 600px) {
     .card { width: 260px; }
-    .orbit-ring { width: 260px; height: 330px; }
-    /* Swing is 260 + 2r (r = 155), so the stage is sized to match. */
-    .orbit-stage { height: 395px; max-width: 570px; }
 }
 </style>
