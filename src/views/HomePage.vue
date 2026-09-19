@@ -1,17 +1,17 @@
 <template>
     <v-main class="home-page">
         <HeroSection />
+        <CaseStudy />
+        <FoundationsList />
         <NowStatus />
-        <TechStackSection />
-        <FeaturedWork />
     </v-main>
 </template>
 
 <script setup>
 import HeroSection from '../components/home/HeroSection.vue'
+import CaseStudy from '../components/projects/CaseStudy.vue'
+import FoundationsList from '../components/projects/FoundationsList.vue'
 import NowStatus from '../components/common/NowStatus.vue'
-import TechStackSection from '../components/home/TechStackSection.vue'
-import FeaturedWork from '../components/home/FeaturedWork.vue'
 </script>
 
 <style scoped>

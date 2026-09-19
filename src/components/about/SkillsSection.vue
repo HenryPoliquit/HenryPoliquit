@@ -1,26 +1,14 @@
 <template>
-    <div class="skills-section mb-8">
-        <div class="section-label mb-3">TECHNICAL SKILLS</div>
-        <h3 class="skills-heading mb-10">What I work with</h3>
+    <section class="stack">
+        <h2 class="col-head stack-label">Stack</h2>
 
-        <v-row>
-            <v-col cols="12" md="4" v-for="(group, key) in skillGroups" :key="key">
-                <div class="skill-group">
-                    <div class="skill-group-header mb-4">
-                        <v-icon :icon="group.icon" color="accent" size="18" class="mr-2"></v-icon>
-                        <span class="skill-group-label">{{ group.label }}</span>
-                    </div>
-                    <div class="skill-tags">
-                        <span
-                            v-for="skill in group.skills"
-                            :key="skill"
-                            class="skill-tag"
-                        >{{ skill }}</span>
-                    </div>
-                </div>
-            </v-col>
-        </v-row>
-    </div>
+        <dl class="stack-list">
+            <div v-for="group in groups" :key="group.label" class="stack-row">
+                <dt class="stack-layer fig">{{ group.label }}</dt>
+                <dd class="stack-items fig">{{ group.items.join(' · ') }}</dd>
+            </div>
+        </dl>
+    </section>
 </template>
 
 <script setup>
@@ -29,73 +17,47 @@ import { usePortfolioStore } from '../../stores/portfolio'
 
 const store = usePortfolioStore()
 
-const skillGroups = computed(() => ({
-    frontend: {
-        label: 'Frontend',
-        icon: 'mdi-vuejs',
-        skills: store.skills.frontend,
-    },
-    backend: {
-        label: 'Backend',
-        icon: 'mdi-server',
-        skills: store.skills.backend,
-    },
-    cloud: {
-        label: 'Cloud (GCP)',
-        icon: 'mdi-cloud',
-        skills: store.skills.cloud,
-    },
-}))
+const groups = computed(() => [
+    { label: 'Frontend', items: store.skills.frontend },
+    { label: 'Backend', items: store.skills.backend },
+    { label: 'Cloud', items: store.skills.cloud },
+])
 </script>
 
 <style scoped>
-.skills-heading {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(1.4rem, 2.5vw, 1.9rem);
-    font-weight: 700;
-    color: rgb(var(--v-theme-on-background));
-    letter-spacing: -0.3px;
+.stack-label {
+    margin-bottom: 24px;
 }
 
-.skill-group {
-    margin-bottom: 32px;
+.stack-list {
+    border-top: var(--rule);
 }
 
-.skill-group-header {
-    display: flex;
-    align-items: center;
+.stack-row {
+    display: grid;
+    grid-template-columns: 160px minmax(0, 1fr);
+    column-gap: 32px;
+    padding: 18px 0;
+    border-bottom: var(--rule);
 }
 
-.skill-group-label {
-    font-family: 'DM Sans', sans-serif;
+.stack-layer {
     font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 2px;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgb(var(--v-theme-on-surface-variant));
 }
 
-.skill-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+.stack-items {
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: rgb(var(--v-theme-on-background));
 }
 
-.skill-tag {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 500;
-    padding: 5px 14px;
-    border-radius: 99px;
-    background: rgb(var(--v-theme-surface));
-    border: 1px solid rgb(var(--v-theme-surface-variant));
-    color: rgb(var(--v-theme-on-surface));
-    transition: border-color 0.2s ease, background 0.2s ease;
-    cursor: default;
-}
-
-.skill-tag:hover {
-    border-color: rgb(var(--v-theme-accent));
-    background: rgba(212, 137, 10, 0.07);
+@media (max-width: 700px) {
+    .stack-row {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 8px;
+    }
 }
 </style>

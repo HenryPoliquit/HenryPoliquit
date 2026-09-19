@@ -3,37 +3,41 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#D4890A">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#E8EAE3" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#101411" media="(prefers-color-scheme: dark)">
 
-    <title>Paul Henry Poliquit | Full-Stack Developer</title>
-    <meta name="description" content="Portfolio of Paul Henry V. Poliquit — Full-Stack Developer specializing in Vue.js, Fastify, and Google Cloud Platform. Building scalable, cloud-native web applications.">
-    <meta name="keywords" content="Paul Henry Poliquit, Full-Stack Developer, Vue.js, Vuetify, Fastify, Node.js, Cloud Run, Firebase, PostgreSQL, GCP, Software Engineer, Philippines">
-    <meta name="author" content="Paul Henry V. Poliquit">
+    <!-- Supabase serves the OG image and every screenshot — open the connection early -->
+    <link rel="preconnect" href="https://qufettbgvupjvbpzmafs.supabase.co" crossorigin>
+    <link rel="dns-prefetch" href="https://qufettbgvupjvbpzmafs.supabase.co">
+
+    <title>Paul Henry Poliquit — Full-stack developer</title>
+    <meta name="description" content="I build web applications and run them. One of them, CompareIP.sg, compares Integrated Shield Plan premiums for Singapore. Vue, Fastify, Cloud Run, Cloud SQL.">
+    <meta name="author" content="Paul Henry Poliquit">
     <meta name="robots" content="index, follow">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://henrypoliquit.vercel.app/">
     <meta property="og:site_name" content="Paul Henry Poliquit">
-    <meta property="og:title" content="Paul Henry Poliquit | Full-Stack Developer">
-    <meta property="og:description" content="Full-Stack Developer specializing in Vue.js, Fastify, and Google Cloud Platform. Building scalable, cloud-native web applications.">
+    <meta property="og:title" content="Paul Henry Poliquit — Full-stack developer">
+    <meta property="og:description" content="I build web applications and run them. One of them, CompareIP.sg, compares Integrated Shield Plan premiums for Singapore.">
     <meta property="og:image" content="https://qufettbgvupjvbpzmafs.supabase.co/storage/v1/object/public/portfolio-assets/projects/compareip.png">
+    <meta property="og:image:alt" content="Screenshot of CompareIP.sg, an Integrated Shield Plan premium comparison tool">
     <meta property="og:locale" content="en_PH">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Paul Henry Poliquit | Full-Stack Developer">
-    <meta name="twitter:description" content="Full-Stack Developer specializing in Vue.js, Fastify, and Google Cloud Platform.">
+    <meta name="twitter:title" content="Paul Henry Poliquit — Full-stack developer">
+    <meta name="twitter:description" content="I build web applications and run them. One of them takes payments in Singapore.">
     <meta name="twitter:image" content="https://qufettbgvupjvbpzmafs.supabase.co/storage/v1/object/public/portfolio-assets/projects/compareip.png">
+    <meta name="twitter:image:alt" content="Screenshot of CompareIP.sg, an Integrated Shield Plan premium comparison tool">
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
 
-    <!-- Sitemap -->
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
-
-    <!-- Canonical -->
     <link rel="canonical" href="https://henrypoliquit.vercel.app/">
 
     <!-- JSON-LD Structured Data -->
@@ -41,31 +45,42 @@
     {
       "@context": "https://schema.org",
       "@type": "Person",
-      "name": "Paul Henry V. Poliquit",
+      "name": "Paul Henry Poliquit",
       "url": "https://henrypoliquit.vercel.app/",
       "email": "paulpoliquit@gmail.com",
-      "jobTitle": "Full-Stack Developer",
-      "description": "Software Engineering student specializing in Vue.js, Fastify, and Google Cloud Platform.",
+      "jobTitle": "Full-stack developer",
+      "description": "Full-stack developer in Bacong, Negros Oriental. Builds and operates web applications on Vue, Fastify and Google Cloud.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Bacong",
+        "addressRegion": "Negros Oriental",
+        "addressCountry": "PH"
+      },
       "sameAs": [
         "https://github.com/HenryPoliquit",
         "https://www.linkedin.com/in/paul-henry-poliquit-7b5b60250",
         "https://www.facebook.com/profile.php?id=100013486023337"
       ],
-      "knowsAbout": ["Vue.js", "Vuetify", "Fastify", "Node.js", "PostgreSQL", "Google Cloud Platform", "Firebase"]
+      "knowsAbout": ["Vue.js", "Vuetify", "Fastify", "Node.js", "PostgreSQL", "Google Cloud Platform", "Cloud Run", "Firebase"],
+      "worksFor": {
+        "@type": "Organization",
+        "name": "CompareIP.sg",
+        "url": "https://compareip.sg/"
+      }
     }
     </script>
   </head>
   <body>
     <!--
-      👋 Hey there, source explorer!
+      Hey there, source explorer.
 
       Built with  Vue 3 + Vuetify 3 + Pinia
       Deployed on Vercel + Supabase
 
-      📬 paulpoliquit@gmail.com
-      🐙 github.com/HenryPoliquit
+      paulpoliquit@gmail.com
+      github.com/HenryPoliquit
 
-      P.S. There's a Konami Code hidden on this site. 🎮
+      P.S. There's a Konami Code hidden on this site.
     -->
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>

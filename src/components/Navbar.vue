@@ -1,84 +1,59 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <v-app-bar
-        app
-        :elevation="scrolled ? 4 : 0"
-        :class="{ 'navbar-scrolled': scrolled }"
-        color="surface"
-        height="72"
-    >
+    <v-app-bar app :elevation="0" class="bar" color="background" height="64">
         <v-container fluid class="d-flex align-center px-4 px-md-8">
-            <!-- Logo/Brand -->
             <div class="brand-section" @click="handleLogoClick">
-                <router-link to="/" class="brand-link d-flex align-center">
-                    <div class="monogram mr-3">PH</div>
-                    <div class="d-none d-sm-block">
-                        <div class="brand-name text-h6 font-weight-bold">Paul Henry Poliquit</div>
-                        <div class="brand-subtitle text-caption">Software Engineer</div>
-                    </div>
+                <router-link to="/" class="brand-link">
+                    <span class="monogram">PHP</span>
+                    <span class="brand-name d-none d-sm-inline">Poliquit</span>
                 </router-link>
             </div>
 
             <v-spacer></v-spacer>
 
-            <!-- Desktop Navigation -->
-            <nav class="d-none d-md-flex align-center">
-                <v-btn
+            <nav class="d-none d-md-flex align-center ga-1" aria-label="Primary">
+                <router-link
                     v-for="item in store.navItems"
                     :key="item.path"
                     :to="item.path"
-                    :class="{ 'nav-link-active': isActive(item.path) }"
-                    class="nav-link mx-1"
-                    variant="text"
-                    size="large"
-                    color="on-surface"
-                >
-                    {{ item.title }}
-                </v-btn>
+                    class="nav-link fig"
+                    :class="{ 'is-active': isActive(item.path) }"
+                    :aria-current="isActive(item.path) ? 'page' : undefined"
+                >{{ item.title }}</router-link>
             </nav>
 
-            <!-- Theme toggle -->
             <v-btn
-                :icon="isDark ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+                :icon="isDark ? mdiWeatherSunny : mdiWeatherNight"
                 variant="text"
-                color="accent"
+                color="on-background"
                 size="small"
-                class="ml-2"
+                class="ml-4"
                 :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
                 @click="toggleTheme"
             ></v-btn>
 
-            <!-- Mobile Menu Button -->
             <v-app-bar-nav-icon
-                @click="drawer = !drawer"
                 class="d-md-none ml-1"
-                size="large"
-                color="on-surface"
+                color="on-background"
+                aria-label="Open navigation menu"
+                @click="drawer = !drawer"
             ></v-app-bar-nav-icon>
         </v-container>
     </v-app-bar>
 
-    <!-- Mobile Navigation Drawer -->
-    <v-navigation-drawer v-model="drawer" temporary location="right" width="280" color="surface">
-        <v-list class="pa-4" nav>
-            <v-list-item class="mb-4">
-                <v-list-item-title class="text-h6 font-weight-bold" style="font-family: 'Syne', sans-serif;">Menu</v-list-item-title>
-            </v-list-item>
-
-            <v-divider class="mb-4" color="surface-variant"></v-divider>
-
-            <v-list-item
+    <v-navigation-drawer v-model="drawer" temporary location="right" width="260" color="background">
+        <nav class="drawer-nav" aria-label="Primary">
+            <p class="col-head drawer-head">Contents</p>
+            <router-link
                 v-for="item in store.navItems"
                 :key="item.path"
                 :to="item.path"
-                :prepend-icon="item.icon"
-                :title="item.title"
-                :active="isActive(item.path)"
+                class="drawer-link fig"
+                :class="{ 'is-active': isActive(item.path) }"
+                :aria-current="isActive(item.path) ? 'page' : undefined"
                 @click="drawer = false"
-                class="mb-2 rounded-lg"
-                color="accent"
-            ></v-list-item>
-        </v-list>
+            >{{ item.title }}</router-link>
+        </nav>
     </v-navigation-drawer>
 </template>
 
@@ -86,12 +61,11 @@
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTheme } from 'vuetify'
-import { useScroll } from '../composables/useScroll'
+import { mdiWeatherSunny, mdiWeatherNight, mdiStarShooting } from '@mdi/js'
 import { usePortfolioStore } from '../stores/portfolio'
 
 const route = useRoute()
 const drawer = ref(false)
-const { scrolled } = useScroll()
 const store = usePortfolioStore()
 const theme = useTheme()
 
@@ -99,7 +73,7 @@ const isDark = computed(() => theme.global.current.value.dark)
 
 function toggleTheme() {
     const next = isDark.value ? 'warmLight' : 'warmDark'
-    theme.global.name.value = next
+    theme.change(next)
     localStorage.setItem('portfolio-theme', next)
 }
 
@@ -115,8 +89,8 @@ function handleLogoClick() {
     if (logoClicks >= 5) {
         logoClicks = 0
         store.recordDiscovery('logo')
-        store.showSnackbar('Easter egg! Try the Konami Code: ↑↑↓↓←→←→BA', 'accent', 'mdi-star-shooting')
-        console.log('%cEaster egg found! Now try: ↑↑↓↓←→←→BA', 'color:#D4890A;font-weight:bold;font-size:13px;')
+        store.showSnackbar('Easter egg. Now try the Konami Code: ↑↑↓↓←→←→BA', 'accent', mdiStarShooting)
+        console.log('%cEaster egg found. Now try: ↑↑↓↓←→←→BA', 'color:#8C2F39;font-weight:bold;font-size:13px;')
     } else {
         logoTimer = setTimeout(() => { logoClicks = 0 }, 2000)
     }
@@ -124,75 +98,78 @@ function handleLogoClick() {
 </script>
 
 <style scoped>
-.navbar-scrolled {
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgb(var(--v-theme-surface-variant)) !important;
+.bar {
+    border-bottom: var(--rule);
 }
 
 .brand-link {
-    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
     color: inherit;
-    transition: opacity 0.2s ease;
-}
-
-.brand-link:hover {
-    opacity: 0.85;
 }
 
 .monogram {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 13px;
-    letter-spacing: 1.5px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
     color: rgb(var(--v-theme-on-accent));
     background: rgb(var(--v-theme-accent));
-    border-radius: 6px;
-    padding: 5px 9px;
+    padding: 3px 6px;
     line-height: 1;
-    flex-shrink: 0;
 }
 
 .brand-name {
-    font-family: 'Syne', sans-serif;
-    line-height: 1.2;
-    letter-spacing: 0.3px;
-    color: rgb(var(--v-theme-on-surface));
-}
-
-.brand-subtitle {
-    font-family: 'DM Sans', sans-serif;
-    opacity: 0.6;
-    line-height: 1;
-    margin-top: 2px;
-    color: rgb(var(--v-theme-on-surface));
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-stretch: 80%;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: rgb(var(--v-theme-on-background));
 }
 
 .nav-link {
-    position: relative;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    transition: all 0.2s ease;
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    color: rgb(var(--v-theme-on-surface-variant));
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%) scaleX(0);
-    width: 70%;
-    height: 1.5px;
-    background: rgb(var(--v-theme-accent));
-    transition: transform 0.25s ease;
+@media (hover: hover) and (pointer: fine) {
+    .nav-link:hover {
+        color: rgb(var(--v-theme-on-background));
+    }
 }
 
-.nav-link:hover::after {
-    transform: translateX(-50%) scaleX(1);
+
+.nav-link.is-active {
+    color: rgb(var(--v-theme-accent));
+    border-bottom-color: rgb(var(--v-theme-accent));
 }
 
-.nav-link-active::after {
-    transform: translateX(-50%) scaleX(1);
+.drawer-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 24px 20px;
+}
+
+.drawer-head {
+    margin-bottom: 16px;
+}
+
+.drawer-link {
+    padding: 14px 0;
+    font-size: 0.9rem;
+    color: rgb(var(--v-theme-on-background));
+    border-bottom: var(--rule);
+}
+
+.drawer-link.is-active {
+    color: rgb(var(--v-theme-accent));
 }
 </style>

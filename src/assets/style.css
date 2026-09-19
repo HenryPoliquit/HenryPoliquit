@@ -1,4 +1,9 @@
-/* Global Styles — Editorial Warmth */
+/* -------------------------------------------------------------------------
+   Global styles - "Rate Card"
+
+   The page is a document that happens to be live. Rules separate columns of
+   real data; they are not decoration. Figures are always mono and tabular.
+   ------------------------------------------------------------------------- */
 
 * {
   margin: 0;
@@ -6,167 +11,233 @@
   box-sizing: border-box;
 }
 
+/* Metric-adjusted fallback. Literata sets 2.65% wider than Georgia (measured),
+   which is enough to move a line break and reflow a paragraph when the webfont
+   swaps in. Scaling Georgia to match keeps the swap invisible. Line boxes are
+   driven by explicit line-height everywhere, so no ascent/descent override is
+   needed. Re-measure if the body face changes. */
+@font-face {
+  font-family: 'Literata Fallback';
+  src: local('Georgia'), local('Times New Roman'), local('Liberation Serif');
+  size-adjust: 102.65%;
+}
+
+:root {
+  /* A rate card has corners, not curves. */
+  --radius-card: 3px;
+  --radius-sm: 2px;
+
+  /* Type roles - swap the whole site's typography here (and in main.js) */
+  --font-display: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-body: 'Literata Variable', 'Literata Fallback', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', Consolas, monospace;
+
+  /* Band rhythm - one scale, so sections can't drift apart */
+  --band-y: 72px;
+  --gutter: 24px;
+
+  --rule: 1px solid rgb(var(--v-theme-surface-variant));
+
+  /* The curve the rate row already prints on, promoted to a token so every
+     state transition shares it. Built-in `ease` is flatter than this and
+     reads as slower at the same duration. */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@media (max-width: 960px) {
+  :root { --band-y: 52px; --gutter: 20px; }
+}
+
+@media (max-width: 600px) {
+  :root { --band-y: 40px; --gutter: 16px; }
+}
+
 body {
-  font-family: 'Lora', Georgia, serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* DM Sans for UI elements — applied by Vuetify component defaults */
-.ui-font {
-  font-family: 'DM Sans', sans-serif;
+/* Vuetify sets its own family on .v-application; without this it falls back to
+   a Roboto stack that is never loaded. */
+.v-application {
+  font-family: var(--font-body);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-display);
+  font-stretch: 88%;
+  letter-spacing: -0.01em;
 }
 
-html {
-  scroll-behavior: smooth;
+a { text-decoration: none; }
+
+/* Inline prose links keep an underline - color alone is not an affordance */
+.prose a,
+a.link {
+  color: rgb(var(--v-theme-accent));
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 
-a {
-  text-decoration: none !important;
+/* -- Focus -------------------------------------------------------------- */
+/* One global rule so no control can ship without a visible focus ring. */
+:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-accent));
+  outline-offset: 2px;
 }
 
-/* ── Custom scrollbar ── */
-::-webkit-scrollbar {
-  width: 8px;
+/* -- Browser surfaces --------------------------------------------------- */
+/* The parts we didn't draw still have to be ours. Left alone, selection
+   paints system blue and the caret paints black - the two loudest defaults
+   on a document this quiet. */
+::selection {
+  background: rgba(var(--v-theme-accent), 0.22);
+  color: rgb(var(--v-theme-on-background));
 }
 
-::-webkit-scrollbar-track {
-  background: rgb(var(--v-theme-background));
+input,
+textarea {
+  caret-color: rgb(var(--v-theme-accent));
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgb(var(--v-theme-accent));
-  border-radius: 4px;
-  opacity: 0.6;
+/* -- Buttons: small mono labels, stamped -------------------------------- */
+.v-btn {
+  font-family: var(--font-mono) !important;
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  transition: transform 0.14s var(--ease-out);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgb(var(--v-theme-primary));
+/* A stamp should answer to being pressed. Subtle on purpose - this is
+   feedback, not an effect. */
+.v-btn:active {
+  transform: scale(0.97);
 }
 
-/* ── Grain texture overlay ── */
-/* Applied as a fixed pseudo-element via .grain-overlay in App.vue */
+/* -- Scrollbar ---------------------------------------------------------- */
+* {
+  scrollbar-color: rgb(var(--v-theme-surface-variant)) transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: rgb(var(--v-theme-background)); }
+::-webkit-scrollbar-thumb { background: rgb(var(--v-theme-surface-variant)); }
+::-webkit-scrollbar-thumb:hover { background: rgb(var(--v-theme-accent)); }
+
+/* -- Paper grain -------------------------------------------------------- */
 .grain-overlay {
   pointer-events: none;
   position: fixed;
   inset: 0;
   z-index: 9997;
-  opacity: 0.028;
+  opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 128px 128px;
 }
 
-/* ── Section divider motif ── */
-.section-rule {
-  border: none;
-  border-top: 1px solid rgb(var(--v-theme-surface-variant));
-  margin: 0;
+/* -------------------------------------------------------------------------
+   Rate-card primitives
+   ------------------------------------------------------------------------- */
+
+/* A band is one horizontal record of the document, closed by a rule. */
+.band {
+  padding: var(--band-y) 0;
+  border-top: var(--rule);
 }
 
-/* ── Section label style: "01 — TITLE" ── */
-.section-label {
-  font-family: 'Syne', sans-serif;
+.band--open { border-top: none; }
+
+/* Band labels name a TIER, not a sequence - PRODUCTION, FOUNDATIONS. */
+.band-label {
+  font-family: var(--font-mono);
   font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 3px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
+  color: rgb(var(--v-theme-on-surface-variant));
+  margin-bottom: 28px;
+}
+
+/* Every figure on the site: tabular, lining, never reflows on update. */
+.fig {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
+/* Column headers in a table of records. */
+.col-head {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgb(var(--v-theme-on-surface-variant));
+}
+
+/* Small print. Carries the honest caveats - what broke, what was coursework.
+   Measures are in rem, not ch: a ch-based max-width rescales the container
+   itself when the webfont swaps, which is what made CLS bad. */
+.small-print {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: rgb(var(--v-theme-on-surface-variant));
+  max-width: 31rem;
+}
+
+.small-print .mark {
   color: rgb(var(--v-theme-accent));
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  margin-right: 0.4em;
 }
 
-.section-label::after {
-  content: '';
-  flex: 1;
-  max-width: 48px;
-  height: 1px;
-  background: rgb(var(--v-theme-accent));
-  opacity: 0.5;
-}
-
-/* ── Lora italic pull quote ── */
-.pull-quote {
-  font-family: 'Lora', Georgia, serif;
-  font-style: italic;
-  font-size: clamp(1.1rem, 2vw, 1.35rem);
-  line-height: 1.8;
+/* Reading measure for body prose. */
+.prose {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.75;
+  max-width: 34rem;
   color: rgb(var(--v-theme-on-surface));
-  opacity: 0.85;
 }
 
-/* ── Amber text gradient ── */
-.text-gradient {
-  background: linear-gradient(135deg, #D4890A 0%, #F0A832 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* A wide record that must scroll inside itself rather than the page body. */
+.scroll-x {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
 }
 
-/* ── Hover lift ── */
-.hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* -- Motion ------------------------------------------------------------- */
+/* One orchestrated moment: the rate row prints on load. Nothing else moves. */
+.print-in {
+  animation: printIn 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(212, 137, 10, 0.18) !important;
+@keyframes printIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
 }
 
-/* ── Fade-in animation ── */
-.fade-in {
-  animation: fadeIn 0.6s ease-in both;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ── Section spacing ── */
-.section-spacing {
-  padding: 80px 0;
-}
-
-@media (max-width: 960px) {
-  .section-spacing { padding: 60px 0; }
-}
-
-@media (max-width: 600px) {
-  .section-spacing { padding: 40px 0; }
-}
-
-/* ── Image shimmer (shared by ProjectCard and FeaturedWork) ── */
-.img-shimmer {
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgb(var(--v-theme-surface)) 25%,
-    rgb(var(--v-theme-surface-variant)) 50%,
-    rgb(var(--v-theme-surface)) 75%
-  );
-  background-size: 400% 100%;
-  animation: imgShimmer 1.5s infinite linear;
-}
-
-@keyframes imgShimmer {
-  from { background-position: 100% 0; }
-  to   { background-position: -100% 0; }
-}
-
+/* Global reduced-motion reset. Everything animated is covered by default, so
+   a new animation can never forget to opt in. */
 @media (prefers-reduced-motion: reduce) {
-  .img-shimmer { animation: none; }
-  .fade-in { animation: none; }
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }

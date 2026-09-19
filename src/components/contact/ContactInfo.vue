@@ -1,114 +1,50 @@
 <template>
-    <v-card class="contact-info-card fade-in" style="animation-delay: 0.2s" elevation="4">
-        <v-card-title class="info-card-title pa-6">
-            <v-icon icon="mdi-information" start color="accent"></v-icon>
-            Contact Information
-        </v-card-title>
-        <v-card-text class="pa-6">
-            <p class="text-body-1 mb-6">
-                Feel free to reach out through any of these channels.
-                I'm always open to discussing new projects and opportunities.
-            </p>
+    <aside class="info">
+        <h2 class="col-head info-label">Direct lines</h2>
 
-            <v-list density="comfortable" class="bg-transparent">
-                <!-- Email — click to copy -->
-                <v-tooltip text="Click to copy email" location="left" theme="dark">
-                    <template v-slot:activator="{ props }">
-                        <v-list-item
-                            v-bind="props"
-                            class="contact-item px-0 mb-3"
-                            style="cursor: pointer"
-                            @click="copyToClipboard(store.personal.email, 'Email')"
-                        >
-                            <template v-slot:prepend>
-                                <v-avatar color="accent" size="48" class="mr-4">
-                                    <v-icon color="white" icon="mdi-email"></v-icon>
-                                </v-avatar>
-                            </template>
-                            <v-list-item-title class="font-weight-medium">Email</v-list-item-title>
-                            <v-list-item-subtitle>{{ store.personal.email }}</v-list-item-subtitle>
-                        </v-list-item>
-                    </template>
-                </v-tooltip>
+        <p class="prose info-intro">Email gets the fastest reply, usually within a day.</p>
 
-                <!-- Phone — click to copy -->
-                <v-tooltip text="Click to copy number" location="left" theme="dark">
-                    <template v-slot:activator="{ props }">
-                        <v-list-item
-                            v-bind="props"
-                            class="contact-item px-0 mb-3"
-                            style="cursor: pointer"
-                            @click="copyToClipboard(store.personal.phone, 'Phone number')"
-                        >
-                            <template v-slot:prepend>
-                                <v-avatar color="accent" size="48" class="mr-4">
-                                    <v-icon color="white" icon="mdi-phone"></v-icon>
-                                </v-avatar>
-                            </template>
-                            <v-list-item-title class="font-weight-medium">Phone</v-list-item-title>
-                            <v-list-item-subtitle>{{ store.personal.phone }}</v-list-item-subtitle>
-                        </v-list-item>
-                    </template>
-                </v-tooltip>
-
-                <!-- Location -->
-                <v-list-item class="contact-item px-0">
-                    <template v-slot:prepend>
-                        <v-avatar color="accent" size="48" class="mr-4">
-                            <v-icon color="white" icon="mdi-map-marker"></v-icon>
-                        </v-avatar>
-                    </template>
-                    <v-list-item-title class="font-weight-medium">Location</v-list-item-title>
-                    <v-list-item-subtitle>{{ store.personal.location }}</v-list-item-subtitle>
-                </v-list-item>
-            </v-list>
-
-            <v-divider class="my-6"></v-divider>
-
-            <!-- Social links -->
-            <div class="d-flex justify-center ga-3 mb-6">
-                <v-tooltip
-                    v-for="link in store.socialLinks"
-                    :key="link.name"
-                    :text="link.name"
-                    location="top"
-                    theme="dark"
-                >
-                    <template v-slot:activator="{ props }">
-                        <v-btn
-                            v-bind="props"
-                            :icon="link.icon"
-                            :href="link.url"
-                            target="_blank"
-                            color="accent"
-                            variant="tonal"
-                            size="large"
-                        ></v-btn>
-                    </template>
-                </v-tooltip>
+        <dl class="info-list">
+            <div class="info-row">
+                <dt class="col-head">Email</dt>
+                <dd>
+                    <button type="button" class="copy fig" @click="copy(store.personal.email, 'Email')">
+                        {{ store.personal.email }}
+                    </button>
+                </dd>
             </div>
 
-            <!-- Download Resume (links to LinkedIn profile since no PDF is hosted) -->
-            <div class="text-center mb-4">
-                <v-btn
-                    :href="store.socialLinks.find(l => l.name === 'LinkedIn')?.url"
-                    target="_blank"
-                    color="primary"
-                    variant="outlined"
-                    prepend-icon="mdi-download"
-                >
-                    View Resume
-                </v-btn>
+            <div class="info-row">
+                <dt class="col-head">Phone</dt>
+                <dd>
+                    <button type="button" class="copy fig" @click="copy(store.personal.phone, 'Phone number')">
+                        {{ store.personal.phone }}
+                    </button>
+                </dd>
             </div>
 
-            <div class="text-center">
-                <v-chip color="success" variant="tonal" size="large">
-                    <v-icon icon="mdi-clock-fast" start></v-icon>
-                    Usually responds within 24 hours
-                </v-chip>
+            <div class="info-row">
+                <dt class="col-head">Located</dt>
+                <dd class="fig">{{ store.personal.location }}</dd>
             </div>
-        </v-card-text>
-    </v-card>
+
+            <div class="info-row">
+                <dt class="col-head">Elsewhere</dt>
+                <dd>
+                    <ul class="info-socials">
+                        <li v-for="link in store.socialLinks" :key="link.name">
+                            <a
+                                :href="link.url"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="fig"
+                            >{{ link.name }}<span aria-hidden="true"> ↗</span></a>
+                        </li>
+                    </ul>
+                </dd>
+            </div>
+        </dl>
+    </aside>
 </template>
 
 <script setup>
@@ -116,33 +52,83 @@ import { usePortfolioStore } from '../../stores/portfolio'
 
 const store = usePortfolioStore()
 
-async function copyToClipboard(text, label) {
+async function copy(text, label) {
     try {
         await navigator.clipboard.writeText(text)
-        store.showSnackbar(`${label} copied to clipboard! 📋`, 'success', 'mdi-content-copy')
+        store.showSnackbar(`${label} copied`, 'success')
     } catch {
-        store.showSnackbar('Could not copy — try manually.', 'error')
+        store.showSnackbar('Could not copy. Select the text instead.', 'error')
     }
 }
 </script>
 
 <style scoped>
-.contact-info-card {
-    height: 100%;
-    background: rgb(var(--v-theme-surface));
-    border: 1px solid rgb(var(--v-theme-surface-variant));
+.info-label {
+    padding-bottom: 16px;
+    border-bottom: var(--rule);
+    margin-bottom: 24px;
 }
 
-.info-card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: rgb(var(--v-theme-on-surface));
-    border-bottom: 1px solid rgb(var(--v-theme-surface-variant));
+.info-intro {
+    font-size: 0.95rem;
+    margin-bottom: 24px;
 }
 
-.contact-item {
-    border-radius: 8px;
-    padding: 8px 0;
+.info-list {
+    border-top: var(--rule);
 }
+
+.info-row {
+    padding: 16px 0;
+    border-bottom: var(--rule);
+}
+
+.info-row dt {
+    margin-bottom: 6px;
+}
+
+.info-row dd {
+    font-size: 0.88rem;
+    color: rgb(var(--v-theme-on-background));
+}
+
+/* Click-to-copy reads as a value, not a button — the hover rule is the hint. */
+.copy {
+    font-size: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    border-bottom: 1px dashed rgba(var(--v-theme-on-surface), 0.35);
+    padding: 0;
+    cursor: copy;
+    transition: color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .copy:hover {
+        color: rgb(var(--v-theme-accent));
+        border-bottom-color: rgb(var(--v-theme-accent));
+    }
+}
+
+
+.info-socials {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+}
+
+.info-socials a {
+    color: rgb(var(--v-theme-accent));
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .info-socials a:hover {
+        border-bottom-color: rgb(var(--v-theme-accent));
+    }
+}
+
 </style>

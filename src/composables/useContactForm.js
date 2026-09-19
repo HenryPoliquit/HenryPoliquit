@@ -59,19 +59,15 @@ export function useContactForm() {
 
             if (error) throw error
 
-            store.showSnackbar("Message sent! I'll get back to you soon. 📬", 'success', 'mdi-email-check')
+            store.showSnackbar("Message sent. I'll get back to you.", 'success')
             form.value = { name: '', email: '', subject: '', message: '', website: '' }
             contactFormRef.value?.reset()
             startCooldown()
-        } catch (err) {
-            const isOffline = !navigator.onLine
-            const isRateLimited = err?.code === 'PT429'
-            const msg = isRateLimited
-                ? 'Please wait a moment before sending another message.'
-                : isOffline
-                  ? 'No internet connection — please check your network.'
-                  : 'Failed to send — please email me directly.'
-            store.showSnackbar(msg, isRateLimited ? 'warning' : 'error', 'mdi-email-alert')
+        } catch {
+            const msg = !navigator.onLine
+                ? 'No connection. Check your network and send again.'
+                : 'The message did not send. Email me directly instead.'
+            store.showSnackbar(msg, 'error')
         } finally {
             submitting.value = false
         }

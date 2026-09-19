@@ -1,86 +1,114 @@
 <template>
-    <div class="profile-section fade-in mb-14">
-        <v-row align="center" class="ga-6">
-            <!-- Photo -->
-            <v-col cols="12" md="3" class="text-center">
-                <div class="profile-photo-wrap">
-                    <v-avatar size="160" class="profile-avatar">
-                        <v-img :src="store.personal.avatarUrl" alt="Profile photo"></v-img>
-                    </v-avatar>
-                    <div class="profile-photo-ring"></div>
-                </div>
-                <p class="profile-name mt-4">{{ store.personal.name }}</p>
-                <p class="profile-title mt-1">{{ store.personal.title }}</p>
-            </v-col>
+    <section class="profile">
+        <div class="profile-photo">
+            <img
+                v-if="!imgFailed"
+                :src="store.personal.avatarUrl"
+                :alt="`${store.personal.name}, portrait`"
+                width="220"
+                height="264"
+                loading="lazy"
+                decoding="async"
+                @error="imgFailed = true"
+            />
+            <div v-else class="profile-fallback" aria-hidden="true">PHP</div>
+        </div>
 
-            <!-- Pull quote bio -->
-            <v-col cols="12" md="9">
-                <div class="profile-quote-wrapper">
-                    <div class="quote-mark" aria-hidden="true">&ldquo;</div>
-                    <p class="pull-quote">{{ store.personal.bio }}</p>
-                </div>
-            </v-col>
-        </v-row>
+        <div class="profile-body">
+            <p class="prose">{{ store.personal.bio }}</p>
 
-        <div class="section-rule mt-12"></div>
-    </div>
+            <dl class="profile-meta">
+                <div>
+                    <dt class="col-head">Based in</dt>
+                    <dd class="fig">{{ store.personal.location }}</dd>
+                </div>
+                <div>
+                    <dt class="col-head">Status</dt>
+                    <dd class="fig" :class="store.personal.available ? 'is-open' : ''">
+                        {{ store.personal.available ? 'Open to work' : 'Not looking' }}
+                    </dd>
+                </div>
+            </dl>
+        </div>
+    </section>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { usePortfolioStore } from '../../stores/portfolio'
 
 const store = usePortfolioStore()
+// `profile.jpg` may not exist yet — fall back to the monogram rather than a
+// broken-image glyph.
+const imgFailed = ref(false)
 </script>
 
 <style scoped>
-.profile-photo-wrap {
-    position: relative;
-    display: inline-block;
+.profile {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    column-gap: 48px;
+    align-items: start;
 }
 
-.profile-avatar {
-    border: 2px solid rgb(var(--v-theme-accent));
-    position: relative;
-    z-index: 1;
+.profile-photo img {
+    display: block;
+    width: 220px;
+    height: 264px;
+    object-fit: cover;
+    border: var(--rule);
+    filter: grayscale(1) contrast(1.05);
 }
 
-.profile-photo-ring {
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    border: 1px solid rgba(212, 137, 10, 0.25);
-    pointer-events: none;
-}
-
-.profile-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.1rem;
+.profile-fallback {
+    display: grid;
+    place-items: center;
+    width: 220px;
+    height: 264px;
+    border: var(--rule);
+    background: rgb(var(--v-theme-surface));
+    font-family: var(--font-display);
+    font-size: 3rem;
     font-weight: 700;
-    color: rgb(var(--v-theme-on-surface));
+    font-stretch: 76%;
+    letter-spacing: 0.06em;
+    color: rgb(var(--v-theme-on-surface-variant));
 }
 
-.profile-title {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    color: rgb(var(--v-theme-accent));
-    font-weight: 500;
+.profile-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 56px;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: var(--rule);
 }
 
-.profile-quote-wrapper {
-    position: relative;
-    padding-left: 24px;
-    border-left: 2px solid rgb(var(--v-theme-accent));
+.profile-meta dt {
+    margin-bottom: 6px;
 }
 
-.quote-mark {
-    font-family: 'Lora', Georgia, serif;
-    font-size: 5rem;
-    line-height: 0.8;
-    color: rgb(var(--v-theme-accent));
-    opacity: 0.2;
-    position: absolute;
-    top: -8px;
-    left: -8px;
-    user-select: none;
+.profile-meta dd {
+    font-size: 0.9rem;
+    color: rgb(var(--v-theme-on-background));
+}
+
+.profile-meta .is-open {
+    color: rgb(var(--v-theme-success));
+}
+
+@media (max-width: 760px) {
+    .profile {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 28px;
+    }
+
+    .profile-photo img,
+    .profile-fallback {
+        width: 160px;
+        height: 192px;
+    }
+
+    .profile-fallback { font-size: 2.2rem; }
 }
 </style>

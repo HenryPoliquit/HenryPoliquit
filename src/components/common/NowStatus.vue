@@ -1,11 +1,10 @@
 <template>
-    <section v-if="store.now?.content" class="now-status" aria-label="What I'm working on now">
+    <section v-if="store.now?.content" class="band now" aria-label="What I'm working on now">
         <v-container>
             <div class="now-inner">
-                <span class="now-pulse" aria-hidden="true"></span>
-                <span class="now-label">Now</span>
-                <p class="now-text">{{ store.now.content }}</p>
-                <span v-if="relativeUpdated" class="now-updated">updated {{ relativeUpdated }}</span>
+                <p class="col-head now-label">Now</p>
+                <p class="now-text prose">{{ store.now.content }}</p>
+                <p v-if="relativeUpdated" class="now-updated fig">updated {{ relativeUpdated }}</p>
             </div>
         </v-container>
     </section>
@@ -32,68 +31,30 @@ const relativeUpdated = computed(() => {
 </script>
 
 <style scoped>
-.now-status {
-    background: rgb(var(--v-theme-background));
-    padding: 8px 0 24px;
+.now {
+    padding: 32px 0;
 }
 
 .now-inner {
-    display: flex;
+    display: grid;
+    grid-template-columns: 160px minmax(0, 1fr) max-content;
     align-items: baseline;
-    flex-wrap: wrap;
-    gap: 6px 14px;
-    padding: 18px 22px;
-    border: 1px solid rgb(var(--v-theme-surface-variant));
-    border-radius: 14px;
-    background: rgba(212, 137, 10, 0.04);
-}
-
-.now-pulse {
-    align-self: center;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: rgb(var(--v-theme-accent));
-    box-shadow: 0 0 0 0 rgba(212, 137, 10, 0.5);
-    animation: now-pulse 2s infinite;
-}
-
-@keyframes now-pulse {
-    0% { box-shadow: 0 0 0 0 rgba(212, 137, 10, 0.5); }
-    70% { box-shadow: 0 0 0 8px rgba(212, 137, 10, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(212, 137, 10, 0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .now-pulse { animation: none; }
-}
-
-.now-label {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-size: 0.72rem;
-    color: rgb(var(--v-theme-accent));
+    column-gap: 32px;
 }
 
 .now-text {
-    flex: 1;
-    min-width: 200px;
-    margin: 0;
-    font-family: 'Lora', Georgia, serif;
-    font-style: italic;
     font-size: 0.98rem;
-    line-height: 1.6;
-    color: rgb(var(--v-theme-on-surface));
-    opacity: 0.85;
 }
 
 .now-updated {
-    font-family: 'DM Sans', sans-serif;
     font-size: 0.72rem;
     color: rgb(var(--v-theme-on-surface-variant));
-    opacity: 0.7;
-    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 800px) {
+    .now-inner {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 8px;
+    }
 }
 </style>

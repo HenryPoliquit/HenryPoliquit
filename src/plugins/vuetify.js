@@ -1,91 +1,92 @@
 /**
- * Vuetify Configuration — Editorial Warmth Theme
- * Two themes: warmLight (ivory/cream) and warmDark (espresso/charcoal)
- * Accent: amber gold throughout
+ * Vuetify Configuration — "Rate Card" theme
+ *
+ * The site is set like an insurance premium rate card: issued-document stock,
+ * hairline rules, figures in tabular mono. Oxblood is the issuer stamp and is
+ * spent only on links and the one figure that matters. Green means a thing is
+ * genuinely running — it is never decorative.
+ *
+ * THIS FILE IS THE PALETTE — swap colors here only.
+ * (Theme names stay warmLight/warmDark: the `portfolio-theme` localStorage key
+ * and the Navbar toggle depend on those strings.)
  */
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import { aliases, mdi } from 'vuetify/iconsets/mdi'
-import '@mdi/font/css/materialdesignicons.css'
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 
-import '@fontsource/plus-jakarta-sans/400.css'
-import '@fontsource/plus-jakarta-sans/600.css'
-import '@fontsource/plus-jakarta-sans/700.css'
-
-// ── Light theme: warm ivory + cream surfaces ──────────────────────────────
+// ── Light: grey-green document stock, oxblood stamp ───────────────────────
 const warmLight = {
     dark: false,
     colors: {
-        primary: '#8B6914',
-        'primary-darken-1': '#6B4F0E',
-        'primary-lighten-1': '#A67C1A',
+        primary: '#6E242C',
+        'primary-darken-1': '#571B22',
+        'primary-lighten-1': '#8C2F39',
 
-        secondary: '#6B6560',
-        'secondary-darken-1': '#524E49',
-        'secondary-lighten-1': '#857F79',
+        secondary: '#5A6259',
+        'secondary-darken-1': '#434A43',
+        'secondary-lighten-1': '#7B837A',
 
-        accent: '#D4890A',
-        'accent-darken-1': '#B5720A',
-        'accent-lighten-1': '#E8A030',
+        accent: '#8C2F39',
+        'accent-darken-1': '#6E242C',
+        'accent-lighten-1': '#A94551',
 
-        background: '#FAF7F2',
-        surface: '#F0EBE1',
-        'surface-variant': '#E8E0D0',
-        'surface-bright': '#FFFFFF',
+        background: '#E8EAE3',
+        surface: '#DDE0D6',
+        'surface-variant': '#C3C8BC',
+        'surface-bright': '#F2F4EE',
 
-        'on-background': '#1C1A18',
-        'on-surface': '#1C1A18',
-        'on-surface-variant': '#6B6560',
-        'on-primary': '#FFFFFF',
-        'on-secondary': '#FFFFFF',
-        'on-accent': '#1C1A18',
+        'on-background': '#141A18',
+        'on-surface': '#141A18',
+        'on-surface-variant': '#5A6259',
+        'on-primary': '#F2F4EE',
+        'on-secondary': '#F2F4EE',
+        'on-accent': '#F2F4EE',
 
-        info: '#5B8DD9',
-        success: '#4A7C59',
-        warning: '#D4890A',
-        error: '#C0392B',
+        info: '#8C2F39',
+        success: '#2E6F4E',
+        warning: '#8A6A1E',
+        error: '#A32B27',
     },
 }
 
-// ── Dark theme: deep espresso + warm charcoal surfaces ───────────────────
+// ── Dark: the same document under a lamp ──────────────────────────────────
 const warmDark = {
     dark: true,
     colors: {
-        primary: '#D4890A',
-        'primary-darken-1': '#B5720A',
-        'primary-lighten-1': '#E8A030',
+        primary: '#D0757E',
+        'primary-darken-1': '#B85C66',
+        'primary-lighten-1': '#DE9199',
 
-        secondary: '#9E9589',
-        'secondary-darken-1': '#7A7168',
-        'secondary-lighten-1': '#B8B0A7',
+        secondary: '#909C93',
+        'secondary-darken-1': '#737F76',
+        'secondary-lighten-1': '#AFB9B1',
 
-        accent: '#F0A832',
-        'accent-darken-1': '#D4890A',
-        'accent-lighten-1': '#F5C06A',
+        accent: '#D0757E',
+        'accent-darken-1': '#B85C66',
+        'accent-lighten-1': '#DE9199',
 
-        background: '#18140F',
-        surface: '#221E17',
-        'surface-variant': '#2D271E',
-        'surface-bright': '#3A3228',
+        background: '#101411',
+        surface: '#171C18',
+        'surface-variant': '#28302A',
+        'surface-bright': '#222922',
 
-        'on-background': '#F5F0E8',
-        'on-surface': '#F5F0E8',
-        'on-surface-variant': '#9E9589',
-        'on-primary': '#1C1A18',
-        'on-secondary': '#F5F0E8',
-        'on-accent': '#1C1A18',
+        'on-background': '#E8EAE3',
+        'on-surface': '#E8EAE3',
+        'on-surface-variant': '#909C93',
+        'on-primary': '#101411',
+        'on-secondary': '#101411',
+        'on-accent': '#101411',
 
-        info: '#7BAFD4',
-        success: '#6AB07A',
-        warning: '#F0A832',
-        error: '#E57373',
+        info: '#D0757E',
+        success: '#5FA37E',
+        warning: '#D9A441',
+        error: '#E0796F',
     },
 }
 
+// Components are auto-imported by vite-plugin-vuetify (see vite.config.js).
 const vuetify = createVuetify({
-    components,
     directives,
 
     theme: {
@@ -96,55 +97,55 @@ const vuetify = createVuetify({
         },
     },
 
+    // mdi-svg: icon paths are imported per-use from @mdi/js and tree-shaken,
+    // instead of shipping the ~1.2 MB @mdi/font webfont for ~20 glyphs.
     icons: {
         defaultSet: 'mdi',
         aliases,
         sets: { mdi },
     },
 
+    // A rate card has no rounded corners and no drop shadows. Typography and
+    // rules do the work; see `.v-btn` in assets/style.css for the label styling.
     defaults: {
         VBtn: {
             variant: 'flat',
             color: 'accent',
-            style: 'text-transform: none; letter-spacing: 0.5px; font-weight: 500;',
-            elevation: 2,
-            rounded: 'lg',
+            elevation: 0,
+            rounded: 0,
         },
         VAppBar: {
             elevation: 0,
-            VBtn: {
-                variant: 'text',
-                rounded: 'lg',
-            },
+            VBtn: { variant: 'text', rounded: 0 },
         },
         VCard: {
-            elevation: 2,
-            rounded: 'xl',
+            elevation: 0,
+            rounded: 0,
         },
         VTextField: {
             variant: 'outlined',
             density: 'comfortable',
             color: 'accent',
-            rounded: 'lg',
+            rounded: 0,
         },
         VTextarea: {
             variant: 'outlined',
             density: 'comfortable',
             color: 'accent',
-            rounded: 'lg',
+            rounded: 0,
         },
         VSelect: {
             variant: 'outlined',
             density: 'comfortable',
             color: 'accent',
-            rounded: 'lg',
+            rounded: 0,
         },
         VChip: {
-            rounded: 'pill',
+            rounded: 0,
             elevation: 0,
         },
         VAvatar: {
-            rounded: 'lg',
+            rounded: 0,
         },
     },
 })
