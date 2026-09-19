@@ -2,10 +2,10 @@
     <Transition name="fab">
         <v-btn
             v-if="visible"
-            icon="mdi-chevron-up"
+            :icon="mdiArrowUp"
             color="accent"
-            size="large"
-            elevation="6"
+            size="small"
+            elevation="0"
             class="back-to-top"
             aria-label="Back to top"
             @click="scrollToTop"
@@ -15,6 +15,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import { mdiArrowUp } from '@mdi/js'
 
 const visible = ref(false)
 const SCROLL_THRESHOLD = 300
@@ -37,11 +38,12 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
     bottom: 24px;
     right: 24px;
     z-index: 1000;
+    border-radius: 0;
 }
 
 .fab-enter-active,
 .fab-leave-active {
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out);
 }
 .fab-enter-from,
 .fab-leave-to {

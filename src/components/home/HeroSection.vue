@@ -1,397 +1,233 @@
 <template>
-    <div class="hero-wrapper">
-        <v-container fluid class="hero-section">
-            <v-row align="center" class="hero-content" no-gutters>
-                <!-- Left: Text content -->
-                <v-col cols="12" lg="7" class="hero-left pr-lg-12">
-                    <!-- Availability badge -->
-                    <div v-if="store.personal.available" class="fade-in availability-badge mb-6">
-                        <span class="status-dot"></span>
-                        <span class="badge-text">Available for opportunities</span>
+    <section class="hero">
+        <v-container class="hero-inner">
+            <p class="hero-eyebrow fig print-in" style="animation-delay: 0s">
+                {{ store.personal.title }} &mdash; {{ store.personal.location }}
+            </p>
+
+            <h1 class="hero-name print-in" style="animation-delay: 0.06s">
+                {{ store.personal.name }}
+            </h1>
+
+            <p class="hero-thesis print-in" style="animation-delay: 0.14s">
+                {{ store.personal.tagline }}
+            </p>
+
+            <!-- Signature: the rate row. One record, ruled like a premium
+                 schedule. The only bold thing on the page. -->
+            <div
+                v-if="p"
+                class="rate scroll-x print-in"
+                style="animation-delay: 0.24s"
+                role="group"
+                aria-label="Production project summary"
+            >
+                <dl class="rate-grid">
+                    <div class="rate-cell">
+                        <dt class="col-head">Product</dt>
+                        <dd>
+                            <a
+                                v-if="p.liveUrl"
+                                :href="p.liveUrl"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="rate-product"
+                            >{{ host }}<span aria-hidden="true">&nbsp;&#8599;</span></a>
+                            <span v-else class="rate-product">{{ p.title }}</span>
+                        </dd>
                     </div>
 
-                    <!-- Lora italic greeting -->
-                    <div class="fade-in lora-greeting mb-2" style="animation-delay: 0.05s">
-                        Hello, I'm
+                    <div class="rate-cell">
+                        <dt class="col-head">Market</dt>
+                        <dd class="fig">{{ p.market ?? EMPTY }}</dd>
                     </div>
 
-                    <!-- Name -->
-                    <div class="fade-in">
-                        <h1 class="hero-name mb-4">
-                            {{ store.personal.name }}
-                        </h1>
+                    <div class="rate-cell rate-cell--wide">
+                        <dt class="col-head">Stack</dt>
+                        <dd class="fig">{{ stack }}</dd>
                     </div>
 
-                    <!-- Typewriter Role -->
-                    <div class="fade-in" style="animation-delay: 0.15s">
-                        <p class="hero-role mb-6">
-                            <span class="role-prefix">A </span>
-                            <span class="role-accent">{{ typewriterText }}</span>
-                            <span class="cursor-blink">{{ showCursor ? '_' : '' }}</span>
-                        </p>
+                    <div class="rate-cell">
+                        <dt class="col-head">Status</dt>
+                        <dd class="fig rate-status" :class="{ 'is-resolved': resolved }">
+                            <span class="dot" aria-hidden="true"></span>{{ resolved ? 'live' : EMPTY }}
+                        </dd>
                     </div>
 
-                    <!-- Bio in Lora -->
-                    <div class="fade-in" style="animation-delay: 0.3s">
-                        <p class="hero-bio mb-10">
-                            Passionate about building scalable, cloud-native web applications.
-                            Currently studying Software Engineering — open to internships and
-                            junior roles.
-                        </p>
+                    <div class="rate-cell">
+                        <dt class="col-head">Since</dt>
+                        <dd class="fig">{{ p.since ?? EMPTY }}</dd>
                     </div>
-
-                    <!-- CTA Buttons -->
-                    <div class="fade-in d-flex flex-wrap ga-3 mb-12" style="animation-delay: 0.4s">
-                        <v-btn color="accent" size="large" to="/projects" class="px-7" elevation="3">
-                            <v-icon icon="mdi-briefcase" start></v-icon>
-                            View Projects
-                        </v-btn>
-                        <v-btn color="accent" size="large" variant="outlined" class="px-7" to="/contact">
-                            <v-icon icon="mdi-email" start></v-icon>
-                            Get In Touch
-                        </v-btn>
-                        <v-btn size="large" variant="outlined" class="px-7 resume-btn" disabled>
-                            <v-icon icon="mdi-file-account" start></v-icon>
-                            Resume
-                        </v-btn>
-                    </div>
-
-                    <!-- Stats -->
-                    <div class="fade-in" style="animation-delay: 0.55s">
-                        <StatsGrid :stats="store.stats" />
-                    </div>
-                </v-col>
-
-                <!-- Right: Profile photo (desktop only) -->
-                <v-col cols="12" lg="5" class="d-none d-lg-flex align-center justify-center hero-right">
-                    <div class="fade-in photo-frame-wrapper" style="animation-delay: 0.2s">
-                        <div class="photo-glow"></div>
-                        <div class="photo-frame">
-                            <v-img
-                                src="/profile.jpg"
-                                alt="Paul Henry Poliquit"
-                                width="380"
-                                height="460"
-                                cover
-                                class="profile-photo"
-                            >
-                                <template v-slot:error>
-                                    <div class="photo-fallback d-flex align-center justify-center">
-                                        <span class="fallback-initials">PH</span>
-                                    </div>
-                                </template>
-                            </v-img>
-                        </div>
-
-                        <!-- Floating tech badge -->
-                        <div class="tech-badge">
-                            <v-icon icon="mdi-code-braces" size="15" color="accent" class="mr-2"></v-icon>
-                            <span class="tech-badge-text">Full-Stack Dev</span>
-                        </div>
-                    </div>
-                </v-col>
-            </v-row>
+                </dl>
+            </div>
         </v-container>
-        <!-- Scroll indicator -->
-        <div class="scroll-indicator" aria-hidden="true">
-            <div class="scroll-track"><div class="scroll-thumb"></div></div>
-            <span class="scroll-text">scroll</span>
-        </div>
-    </div>
+    </section>
 </template>
 
 <script setup>
-import { useTypewriter } from '../../composables/useTypewriter'
+import { computed, ref, onMounted } from 'vue'
 import { usePortfolioStore } from '../../stores/portfolio'
-import StatsGrid from './StatsGrid.vue'
+
+// Em dash: the ledger convention for "no value here".
+const EMPTY = '—'
 
 const store = usePortfolioStore()
-const { typewriterText, showCursor } = useTypewriter([
-    'Software Engineering Student',
-    'Full-Stack Web Developer',
-    'Cloud Infrastructure Enthusiast',
-])
+const p = computed(() => store.production)
+
+// Bare host, no scheme or trailing slash. It reads as a figure, not a URL.
+const host = computed(() => {
+    if (!p.value?.liveUrl) return p.value?.title ?? ''
+    try {
+        return new URL(p.value.liveUrl).host.replace(/^www\./, '')
+    } catch {
+        return p.value.title
+    }
+})
+
+// Three names, not nine. The full list lives in the case study.
+const stack = computed(() => (p.value?.technologies ?? []).slice(0, 3).join(' · ') || EMPTY)
+
+// The one orchestrated moment: status resolves from a dash to a live dot.
+const resolved = ref(true)
+onMounted(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    resolved.value = false
+    setTimeout(() => { resolved.value = true }, 750)
+})
 </script>
 
 <style scoped>
-.hero-wrapper {
-    position: relative;
-    min-height: calc(100vh - 72px);
-    background-color: rgb(var(--v-theme-background));
+.hero {
+    background: rgb(var(--v-theme-background));
+}
+
+.hero-inner {
+    padding-top: clamp(56px, 12vh, 132px);
+    padding-bottom: var(--band-y);
+}
+
+.hero-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(var(--v-theme-on-surface-variant));
+    margin-bottom: 20px;
+}
+
+/* Condensed uppercase grotesque: the language of schedules and timetables. */
+.hero-name {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 9vw, 6.25rem);
+    font-weight: 700;
+    font-stretch: 76%;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    line-height: 0.92;
+    color: rgb(var(--v-theme-on-background));
+    margin-bottom: 28px;
+}
+
+.hero-thesis {
+    font-family: var(--font-body);
+    font-size: clamp(1.05rem, 2.2vw, 1.45rem);
+    line-height: 1.55;
+    max-width: 30rem;
+    color: rgb(var(--v-theme-on-background));
+    margin-bottom: 52px;
+}
+
+/* -- The rate row ------------------------------------------------------- */
+.rate {
+    border-top: 2px solid rgb(var(--v-theme-on-background));
+    border-bottom: 2px solid rgb(var(--v-theme-on-background));
+
+    /* Scrolling shadows. The row is wider than a phone, and the cells that pay
+       it off (STATUS, SINCE) sit at the far end — without a cue they read as
+       the end of the record rather than the middle of it.
+       The `local` layers scroll with the content and mask the `scroll` layers
+       at each end, so the cue appears only while there is more row to reach,
+       and never on desktop where nothing overflows. */
+    background:
+        linear-gradient(to right, rgb(var(--v-theme-background)) 40%, transparent)
+            left center / 32px 100% no-repeat local,
+        linear-gradient(to left, rgb(var(--v-theme-background)) 40%, transparent)
+            right center / 32px 100% no-repeat local,
+        linear-gradient(to right, rgba(var(--v-theme-on-background), 0.22), transparent)
+            left center / 10px 100% no-repeat scroll,
+        linear-gradient(to left, rgba(var(--v-theme-on-background), 0.22), transparent)
+            right center / 10px 100% no-repeat scroll;
+}
+
+.rate-grid {
+    display: grid;
+    grid-template-columns: max-content max-content minmax(180px, 1fr) max-content max-content;
+    gap: 0 32px;
+    padding: 14px 0;
+    min-width: max-content;
+}
+
+.rate-cell dt {
+    margin-bottom: 6px;
+}
+
+.rate-cell dd {
+    font-size: 0.95rem;
+    color: rgb(var(--v-theme-on-background));
+    white-space: nowrap;
+}
+
+.rate-cell--wide dd {
+    white-space: normal;
+}
+
+.rate-product {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    color: rgb(var(--v-theme-accent));
+    border-bottom: 1px solid rgba(var(--v-theme-accent), 0.4);
+    transition: border-color 0.2s var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .rate-product:hover {
+        border-bottom-color: rgb(var(--v-theme-accent));
+    }
+}
+
+
+.rate-status {
     display: flex;
     align-items: center;
-    overflow: hidden;
+    gap: 7px;
+    color: rgb(var(--v-theme-on-surface-variant));
 }
 
-/* Warm radial gradient atmosphere */
-.hero-wrapper::before {
-    content: '';
-    position: absolute;
-    top: -20%;
-    right: -10%;
-    width: 60%;
-    height: 80%;
-    background: radial-gradient(ellipse at center, rgba(212, 137, 10, 0.07) 0%, transparent 65%);
-    pointer-events: none;
+.rate-status.is-resolved {
+    color: rgb(var(--v-theme-success));
 }
 
-/* Editorial grid — subtle amber lines */
-.hero-wrapper::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(212, 137, 10, 0.038) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(212, 137, 10, 0.038) 1px, transparent 1px);
-    background-size: 64px 64px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.hero-section {
-    position: relative;
-    z-index: 1;
-    padding: 80px 48px;
-    width: 100%;
-}
-
-.hero-content {
-    min-height: calc(100vh - 72px);
-}
-
-.hero-left {
-    padding-top: 40px;
-    padding-bottom: 40px;
-}
-
-/* ── Availability badge ── */
-.availability-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(74, 124, 89, 0.12);
-    border: 1px solid rgba(74, 124, 89, 0.3);
-    padding: 6px 16px;
-    border-radius: 99px;
-}
-
-.status-dot {
+.dot {
     width: 7px;
     height: 7px;
     border-radius: 50%;
+    background: rgb(var(--v-theme-on-surface-variant));
+    opacity: 0.4;
+    transition: background-color 0.3s var(--ease-out), opacity 0.3s var(--ease-out);
+}
+
+.is-resolved .dot {
     background: rgb(var(--v-theme-success));
-    flex-shrink: 0;
-    animation: statusPulse 2s ease-in-out infinite;
-}
-
-.badge-text {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: rgb(var(--v-theme-on-surface));
-    opacity: 0.8;
-}
-
-@keyframes statusPulse {
-    0%   { box-shadow: 0 0 0 0 rgba(74, 124, 89, 0.5); }
-    70%  { box-shadow: 0 0 0 7px rgba(74, 124, 89, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(74, 124, 89, 0); }
-}
-
-/* ── Lora greeting ── */
-.lora-greeting {
-    font-family: 'Lora', Georgia, serif;
-    font-style: italic;
-    font-size: clamp(1rem, 1.8vw, 1.2rem);
-    color: rgb(var(--v-theme-accent));
-    font-weight: 400;
-}
-
-/* ── Typography ── */
-.hero-name {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2.6rem, 5.5vw, 4.5rem);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -1.5px;
-    color: rgb(var(--v-theme-on-background));
-}
-
-.hero-role {
-    font-family: 'DM Sans', sans-serif;
-    font-size: clamp(1.1rem, 2vw, 1.35rem);
-    color: rgb(var(--v-theme-on-surface-variant));
-    font-weight: 400;
-    line-height: 1.5;
-}
-
-.role-prefix {
-    opacity: 0.6;
-}
-
-.role-accent {
-    color: rgb(var(--v-theme-accent));
-}
-
-.hero-bio {
-    font-family: 'Lora', Georgia, serif;
-    font-size: 1.05rem;
-    line-height: 1.85;
-    color: rgb(var(--v-theme-on-surface));
-    opacity: 0.78;
-    max-width: 500px;
-}
-
-.cursor-blink {
-    animation: blink 1s step-end infinite;
-    color: rgb(var(--v-theme-accent));
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0; }
-}
-
-.resume-btn {
-    border-color: rgb(var(--v-theme-surface-variant));
-    color: rgb(var(--v-theme-on-surface-variant));
-    opacity: 0.5;
-}
-
-/* ── Photo ── */
-.hero-right {
-    padding-top: 40px;
-    padding-bottom: 40px;
-}
-
-.photo-frame-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-.photo-glow {
-    position: absolute;
-    inset: -24px;
-    background: radial-gradient(ellipse at center, rgba(212, 137, 10, 0.18) 0%, transparent 68%);
-    pointer-events: none;
-    border-radius: 20px;
-}
-
-.photo-frame {
-    position: relative;
-    border-radius: 18px;
-    overflow: hidden;
-    border: 1px solid rgba(212, 137, 10, 0.25);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(212, 137, 10, 0.1);
-}
-
-.photo-fallback {
-    width: 380px;
-    height: 460px;
-    background: rgb(var(--v-theme-surface));
-}
-
-.fallback-initials {
-    font-family: 'Syne', sans-serif;
-    font-size: 5rem;
-    font-weight: 800;
-    color: rgb(var(--v-theme-accent));
-    opacity: 0.25;
-    letter-spacing: 4px;
-}
-
-/* ── Floating tech badge ── */
-.tech-badge {
-    position: absolute;
-    bottom: -16px;
-    left: -20px;
-    display: flex;
-    align-items: center;
-    background: rgb(var(--v-theme-surface));
-    border: 1px solid rgba(212, 137, 10, 0.3);
-    border-radius: 10px;
-    padding: 10px 16px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-.tech-badge-text {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: rgb(var(--v-theme-on-surface));
-    letter-spacing: 0.3px;
-}
-
-/* ── Mobile ── */
-@media (max-width: 1279px) {
-    .hero-section { padding: 60px 24px; }
-    .hero-content { min-height: auto; padding: 40px 0; }
-    .hero-bio { max-width: 100%; }
+    opacity: 1;
 }
 
 @media (max-width: 600px) {
-    .hero-section { padding: 40px 16px; }
-}
+    .rate-grid {
+        gap: 0 24px;
+        padding: 12px 0;
+    }
 
-/* ── Scroll indicator ── */
-.scroll-indicator {
-    position: absolute;
-    bottom: 28px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    opacity: 0.45;
-    animation: fadeIn 1s ease 1.2s both;
-    z-index: 2;
-}
-
-.scroll-track {
-    width: 1.5px;
-    height: 44px;
-    background: rgba(212, 137, 10, 0.25);
-    border-radius: 2px;
-    position: relative;
-    overflow: hidden;
-}
-
-.scroll-thumb {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 40%;
-    background: rgb(var(--v-theme-accent));
-    border-radius: 2px;
-    animation: scrollThumb 1.8s ease-in-out infinite;
-}
-
-.scroll-text {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.62rem;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: rgb(var(--v-theme-accent));
-}
-
-@keyframes scrollThumb {
-    0%   { transform: translateY(-100%); opacity: 0; }
-    20%  { opacity: 1; }
-    80%  { opacity: 1; }
-    100% { transform: translateY(350%); opacity: 0; }
-}
-
-/* ── Mobile ── */
-@media (max-width: 1279px) {
-    .scroll-indicator { display: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .status-dot { animation: none; }
-    .cursor-blink { animation: none; }
-    .scroll-indicator { display: none; }
+    .rate-cell dd {
+        font-size: 0.88rem;
+    }
 }
 </style>

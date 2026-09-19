@@ -22,14 +22,10 @@ export function useEasterEggs() {
         if (sequence.join(',') === KONAMI.join(',')) {
             sequence = []
             store.recordDiscovery('konami')
-            store.showSnackbar(
-                '🎮 Konami Code! You\'re one of us.',
-                'accent',
-                'mdi-gamepad-variant'
-            )
+            store.showSnackbar('Konami Code. You are one of us.', 'accent')
             console.log(
-                '%c🎮 Konami Code activated! Nice moves.',
-                'color:#6272F5;font-size:14px;font-weight:bold;'
+                '%cKonami Code activated. Nice moves.',
+                'color:#8C2F39;font-size:14px;font-weight:bold;'
             )
             console.log(
                 '%cType window.portfolio to explore the site data.',

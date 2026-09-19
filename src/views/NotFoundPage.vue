@@ -1,21 +1,14 @@
 <template>
-    <v-main class="not-found-page">
-        <div class="not-found-wrapper d-flex align-center justify-center">
-            <div class="text-center px-4">
-                <div class="error-bg-text" aria-hidden="true">404</div>
-                <div class="error-content">
-                    <p class="not-found-label mb-2">Page not found</p>
-                    <h1 class="not-found-heading mb-4">You've wandered off the map.</h1>
-                    <p class="not-found-desc mb-10">
-                        The page you're looking for doesn't exist, or has moved somewhere else.
-                    </p>
-                    <v-btn color="accent" size="large" to="/" class="px-10">
-                        <v-icon icon="mdi-home" start></v-icon>
-                        Back to Home
-                    </v-btn>
-                </div>
-            </div>
-        </div>
+    <v-main class="nf">
+        <v-container class="nf-inner">
+            <p class="col-head nf-code">Error 404</p>
+            <h1 class="nf-heading">No record<br />under that reference</h1>
+            <p class="prose nf-desc">
+                Nothing is filed at <code class="fig">{{ route.fullPath }}</code>. It was either
+                never issued, or it has been superseded.
+            </p>
+            <v-btn color="accent" to="/">Back to the front page</v-btn>
+        </v-container>
     </v-main>
 </template>
 
@@ -31,62 +24,39 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.not-found-page {
+.nf {
     background: rgb(var(--v-theme-background));
 }
 
-.not-found-wrapper {
-    min-height: calc(100vh - 72px);
-    position: relative;
-    overflow: hidden;
+.nf-inner {
+    padding-top: clamp(64px, 16vh, 160px);
+    padding-bottom: var(--band-y);
 }
 
-.error-bg-text {
-    position: absolute;
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(12rem, 30vw, 22rem);
-    font-weight: 800;
+.nf-code {
     color: rgb(var(--v-theme-accent));
-    opacity: 0.04;
-    line-height: 1;
-    letter-spacing: -8px;
-    user-select: none;
-    pointer-events: none;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    white-space: nowrap;
+    margin-bottom: 18px;
 }
 
-.error-content {
-    position: relative;
-    z-index: 1;
-}
-
-.not-found-label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
+.nf-heading {
+    font-size: clamp(2.2rem, 7vw, 4.5rem);
     font-weight: 700;
-    letter-spacing: 3px;
+    font-stretch: 76%;
     text-transform: uppercase;
-    color: rgb(var(--v-theme-accent));
-}
-
-.not-found-heading {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    font-weight: 800;
+    letter-spacing: -0.015em;
+    line-height: 0.94;
     color: rgb(var(--v-theme-on-background));
-    letter-spacing: -0.5px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid rgb(var(--v-theme-on-background));
 }
 
-.not-found-desc {
-    font-family: 'Lora', Georgia, serif;
-    font-style: italic;
-    font-size: 1.05rem;
-    color: rgb(var(--v-theme-on-surface-variant));
-    max-width: 380px;
-    margin-inline: auto;
-    line-height: 1.75;
+.nf-desc {
+    margin: 24px 0 36px;
+}
+
+.nf-desc code {
+    font-size: 0.9em;
+    color: rgb(var(--v-theme-accent));
+    word-break: break-all;
 }
 </style>

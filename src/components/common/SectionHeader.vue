@@ -1,12 +1,9 @@
 <template>
-    <v-row>
-        <v-col cols="12" class="mb-10">
-            <div v-if="label" class="section-label mb-3">{{ label }}</div>
-            <h2 class="section-header-title mb-4">{{ title }}</h2>
-            <div class="section-header-rule"></div>
-            <p v-if="subtitle" class="section-header-subtitle mt-4">{{ subtitle }}</p>
-        </v-col>
-    </v-row>
+    <header class="page-head">
+        <p v-if="label" class="col-head page-head-label">{{ label }}</p>
+        <component :is="tag" class="page-head-title">{{ title }}</component>
+        <p v-if="subtitle" class="page-head-subtitle">{{ subtitle }}</p>
+    </header>
 </template>
 
 <script setup>
@@ -14,32 +11,37 @@ defineProps({
     title: { type: String, required: true },
     subtitle: { type: String, default: '' },
     label: { type: String, default: '' },
-    dark: { type: Boolean, default: false }, // kept for backwards compatibility, unused
+    tag: { type: String, default: 'h2' }, // 'h1' when this is the page title
 })
 </script>
 
 <style scoped>
-.section-header-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 800;
-    letter-spacing: -0.5px;
+.page-head {
+    padding-bottom: 28px;
+    border-bottom: 2px solid rgb(var(--v-theme-on-background));
+    margin-bottom: 8px;
+}
+
+.page-head-label {
+    margin-bottom: 14px;
+}
+
+.page-head-title {
+    font-size: clamp(2.1rem, 6vw, 3.75rem);
+    font-weight: 700;
+    font-stretch: 78%;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    line-height: 0.95;
     color: rgb(var(--v-theme-on-background));
-    line-height: 1.1;
 }
 
-.section-header-rule {
-    width: 48px;
-    height: 2px;
-    background: rgb(var(--v-theme-accent));
-    border-radius: 2px;
-}
-
-.section-header-subtitle {
-    font-family: 'Lora', Georgia, serif;
-    font-style: italic;
-    font-size: 1.05rem;
+.page-head-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.02rem;
+    line-height: 1.6;
+    max-width: 30rem;
+    margin-top: 14px;
     color: rgb(var(--v-theme-on-surface-variant));
-    line-height: 1.7;
 }
 </style>

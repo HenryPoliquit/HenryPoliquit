@@ -1,77 +1,63 @@
 <template>
-    <v-card class="contact-card fade-in" elevation="8">
-        <v-card-title class="form-card-title pa-6">
-            <v-icon icon="mdi-email-edit" start color="accent"></v-icon>
-            Send Me a Message
-        </v-card-title>
-        <v-card-text class="pa-6">
-            <v-form ref="contactFormRef" v-model="formValid" @submit.prevent="handleSubmit">
-                <!-- Honeypot: hidden from humans, bots fill it and get silently dropped -->
-                <div class="hp-field" aria-hidden="true">
-                    <label for="hp-website">Website</label>
-                    <input
-                        id="hp-website"
-                        v-model="form.website"
-                        type="text"
-                        name="website"
-                        tabindex="-1"
-                        autocomplete="off"
-                    />
-                </div>
+    <div class="form-block">
+        <h2 class="col-head form-label">Send a message</h2>
 
-                <v-text-field
-                    v-model="form.name"
-                    label="Your Name"
-                    placeholder="John Doe"
-                    :rules="[rules.required]"
-                    prepend-inner-icon="mdi-account"
-                    class="mb-4"
-                ></v-text-field>
+        <v-form ref="contactFormRef" v-model="formValid" @submit.prevent="handleSubmit">
+            <!-- Honeypot: hidden from humans, bots fill it and get silently dropped -->
+            <div class="hp-field" aria-hidden="true">
+                <label for="hp-website">Website</label>
+                <input
+                    id="hp-website"
+                    v-model="form.website"
+                    type="text"
+                    name="website"
+                    tabindex="-1"
+                    autocomplete="off"
+                />
+            </div>
 
-                <v-text-field
-                    v-model="form.email"
-                    label="Email Address"
-                    placeholder="john@example.com"
-                    type="email"
-                    :rules="[rules.required, rules.email]"
-                    prepend-inner-icon="mdi-email"
-                    class="mb-4"
-                ></v-text-field>
+            <v-text-field
+                v-model="form.name"
+                label="Your name"
+                :rules="[rules.required]"
+                autocomplete="name"
+                class="mb-4"
+            ></v-text-field>
 
-                <v-text-field
-                    v-model="form.subject"
-                    label="Subject"
-                    placeholder="Project Inquiry"
-                    :rules="[rules.required]"
-                    prepend-inner-icon="mdi-comment-text"
-                    class="mb-4"
-                ></v-text-field>
+            <v-text-field
+                v-model="form.email"
+                label="Email address"
+                type="email"
+                :rules="[rules.required, rules.email]"
+                autocomplete="email"
+                class="mb-4"
+            ></v-text-field>
 
-                <v-textarea
-                    v-model="form.message"
-                    label="Message"
-                    placeholder="Tell me about your project..."
-                    rows="5"
-                    :rules="[rules.required]"
-                    prepend-inner-icon="mdi-message-text"
-                    class="mb-4"
-                ></v-textarea>
+            <v-text-field
+                v-model="form.subject"
+                label="Subject"
+                :rules="[rules.required]"
+                class="mb-4"
+            ></v-text-field>
 
-                <v-btn
-                    type="submit"
-                    color="accent"
-                    block
-                    size="large"
-                    :loading="submitting"
-                    :disabled="!formValid || cooldown"
-                    class="mt-2"
-                >
-                    <v-icon icon="mdi-send" start></v-icon>
-                    {{ cooldown ? `Wait ${cooldownSeconds}s…` : 'Send Message' }}
-                </v-btn>
-            </v-form>
-        </v-card-text>
-    </v-card>
+            <v-textarea
+                v-model="form.message"
+                label="Message"
+                rows="6"
+                :rules="[rules.required]"
+                class="mb-4"
+            ></v-textarea>
+
+            <v-btn
+                type="submit"
+                color="accent"
+                block
+                size="large"
+                :loading="submitting"
+                :disabled="!formValid || cooldown"
+            >{{ cooldown ? `Wait ${cooldownSeconds}s` : 'Send message' }}</v-btn>
+        </v-form>
+    </div>
 </template>
 
 <script setup>
@@ -81,17 +67,10 @@ const { form, formValid, submitting, cooldown, cooldownSeconds, rules, contactFo
 </script>
 
 <style scoped>
-.contact-card {
-    border-top: 3px solid rgb(var(--v-theme-accent));
-    background: rgb(var(--v-theme-surface));
-}
-
-.form-card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: rgb(var(--v-theme-on-surface));
-    border-bottom: 1px solid rgb(var(--v-theme-surface-variant));
+.form-label {
+    padding-bottom: 16px;
+    border-bottom: var(--rule);
+    margin-bottom: 28px;
 }
 
 /* Honeypot — off-screen (not display:none, which some bots skip) */

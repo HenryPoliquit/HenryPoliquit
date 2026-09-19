@@ -1,12 +1,15 @@
 <template>
+    <!-- No aria-label: the visible text already names the control, and an
+         override that doesn't start with the visible string breaks voice
+         control ("click applause"). The live region announces the new total. -->
     <button
-        class="clap-btn"
+        class="clap-btn fig"
         :class="{ 'just-clapped': pulse }"
-        :aria-label="`Appreciate ${count} ${count === 1 ? 'time' : 'times'}`"
         @click="clap"
     >
-        <v-icon :icon="count > 0 ? 'mdi-hand-clap' : 'mdi-hand-clap-outline'" size="18" />
-        <span class="clap-count">{{ count }}</span>
+        <span>Applause</span>
+        <span class="clap-count" aria-hidden="true">{{ count }}</span>
+        <span class="sr-only" aria-live="polite">{{ count }}</span>
     </button>
 </template>
 
@@ -66,23 +69,39 @@ onUnmounted(() => {
 .clap-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border-radius: 99px;
-    border: 1px solid rgba(212, 137, 10, 0.25);
-    background: rgba(212, 137, 10, 0.06);
-    color: rgb(var(--v-theme-accent));
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
+    gap: 12px;
+    padding: 0 14px;
+    height: 36px;
+    border: var(--rule);
+    background: transparent;
+    color: rgb(var(--v-theme-on-surface-variant));
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
-    font-variant-numeric: tabular-nums;
+    transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out), transform 0.15s var(--ease-out);
 }
 
-.clap-btn:hover {
-    background: rgba(212, 137, 10, 0.14);
-    border-color: rgba(212, 137, 10, 0.5);
+@media (hover: hover) and (pointer: fine) {
+    .clap-btn:hover {
+        border-color: rgb(var(--v-theme-accent));
+        color: rgb(var(--v-theme-accent));
+    }
+}
+
+
+.clap-count {
+    color: rgb(var(--v-theme-on-background));
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
 }
 
 .clap-btn:active {

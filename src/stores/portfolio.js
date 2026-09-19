@@ -2,6 +2,10 @@ import { ref, reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { supabase } from '../lib/supabase'
 
+// Bundled, not fetched. This is the only proof the site rests on, so it ships
+// in the build and cannot 404 when the backend is paused, moved or deleted.
+import compareipShot from '../assets/images/compareip.webp'
+
 export const usePortfolioStore = defineStore('portfolio', () => {
     // ──────────────────────────────────────────────────────────────
     // Content is fetched from Supabase on init (see loadContent).
@@ -10,114 +14,110 @@ export const usePortfolioStore = defineStore('portfolio', () => {
     // ──────────────────────────────────────────────────────────────
 
     const personal = ref({
-        name: 'Paul Henry V. Poliquit',
-        title: 'Full-Stack Developer | Cloud Enthusiast',
-        bio: 'Software Engineering student at Lithan EduClaaS specializing in modern web development and cloud technologies. Experienced in building scalable full-stack applications using Vue.js ecosystem and Google Cloud Platform, with emphasis on clean architecture and performance optimization.',
+        name: 'Paul Henry Poliquit',
+        title: 'Full-stack developer',
+        // The thesis line under the name on the home page.
+        tagline: 'I build web applications and run them. One of them takes payments in Singapore.',
+        bio: "I'm a full-stack developer in Bacong, Negros Oriental. I build web applications and then run them. Right now that means CompareIP.sg — a premium-comparison tool for Singapore's Integrated Shield Plan market — which I keep alive on Cloud Run and Cloud SQL from about 2,400 km away. I learned Java and Spring in coursework at Lithan EduClaaS. I learned everything else by having something in production.",
         avatarUrl: '/profile.jpg',
         email: 'paulpoliquit@gmail.com',
         phone: '+639158171758',
-        location: 'Philippines',
+        location: 'Bacong, Negros Oriental',
         available: true,
     })
 
     // Static UI config — not part of the CMS.
+    // Links are rendered as text, so no icons are needed.
     const navItems = [
-        { path: '/', title: 'Home', icon: 'mdi-home' },
-        { path: '/about', title: 'About', icon: 'mdi-account' },
-        { path: '/projects', title: 'Projects', icon: 'mdi-briefcase' },
-        { path: '/contact', title: 'Contact', icon: 'mdi-email' },
+        { path: '/', title: 'Home' },
+        { path: '/about', title: 'About' },
+        { path: '/projects', title: 'Work' },
+        { path: '/contact', title: 'Contact' },
     ]
 
     const socialLinks = [
-        { name: 'Facebook', icon: 'mdi-facebook', url: 'https://www.facebook.com/profile.php?id=100013486023337' },
-        { name: 'LinkedIn', icon: 'mdi-linkedin', url: 'https://www.linkedin.com/in/paul-henry-poliquit-7b5b60250' },
-        { name: 'GitHub', icon: 'mdi-github', url: 'https://github.com/HenryPoliquit' },
+        { name: 'GitHub', url: 'https://github.com/HenryPoliquit' },
+        { name: 'LinkedIn', url: 'https://www.linkedin.com/in/paul-henry-poliquit-7b5b60250' },
+        { name: 'Facebook', url: 'https://www.facebook.com/profile.php?id=100013486023337' },
     ]
 
-    // Reactive computed — stays accurate if the page is open across a year boundary
-    const yearsLearning = computed(() =>
-        Math.floor((Date.now() - new Date('2022-09-01').getTime()) / (365.25 * 24 * 60 * 60 * 1000))
-    )
-
-    const features = ref([
-        {
-            title: 'Responsive',
-            description: 'Building applications that work seamlessly across all devices and screen sizes.',
-            icon: 'mdi-responsive',
-            color: 'primary',
-        },
-        {
-            title: 'Scalable',
-            description: 'Architecting solutions designed to grow with your business needs.',
-            icon: 'mdi-chart-line',
-            color: 'success',
-        },
-        {
-            title: 'Modern',
-            description: 'Leveraging cutting-edge technologies and best practices.',
-            icon: 'mdi-rocket-launch',
-            color: 'warning',
-        },
-        {
-            title: 'Cloud-Native',
-            description: 'Deploying applications on robust cloud infrastructure for reliability.',
-            icon: 'mdi-cloud-check',
-            color: 'accent',
-        },
-    ])
-
+    // Only what he'd defend in an interview — a long tag cloud reads as padding.
     const skills = ref({
-        frontend: ['Vue.js', 'Vuetify', 'JavaScript', 'HTML5', 'CSS3', 'Responsive Design'],
-        backend: ['Fastify', 'Node.js', 'PostgreSQL', 'REST APIs', 'Database Design'],
-        cloud: [
-            'Cloud Run', 'Cloud SQL', 'Firebase', 'Firebase Hosting',
-            'Firebase Auth', 'Firebase Storage', 'Cloud Storage',
-            'Remote Config', 'API Gateway', 'Apps Script',
-        ],
+        frontend: ['Vue 3', 'Vuetify', 'JavaScript', 'React'],
+        backend: ['Fastify', 'Node.js', 'PostgreSQL', 'Spring Boot', 'Java'],
+        cloud: ['Cloud Run', 'Cloud SQL', 'API Gateway', 'Firebase Auth', 'Cloud Storage'],
     })
+
+    const COURSEWORK_CAVEAT = 'Coursework, built to a brief at Lithan EduClaaS.'
+    const IMG = 'https://qufettbgvupjvbpzmafs.supabase.co/storage/v1/object/public/portfolio-assets/projects'
 
     const projects = ref([
         {
             id: 1,
+            tier: 'production',
             title: 'CompareIP.sg',
-            description: 'Production platform serving Singapore\'s insurance market — a full-stack app for comparing Integrated Shield Plan (IP) premiums. Features plan comparison, premium mapping, and personalised profiles for consumers, with a HitPay-powered subscription tier for Financial Agents. Backend runs on Cloud Run with Fastify, backed by Cloud SQL PostgreSQL and exposed via GCP API Gateway.',
-            image: 'https://qufettbgvupjvbpzmafs.supabase.co/storage/v1/object/public/portfolio-assets/projects/compareip.png',
-            technologies: ['Vue 3', 'Vuetify 3', 'Fastify', 'Cloud Run', 'Cloud SQL', 'PostgreSQL', 'Firebase', 'API Gateway', 'HitPay'],
+            tagline: "Premium comparison for Singapore's Integrated Shield Plan market.",
+            market: 'Singapore',
+            since: '2025',
+            problem:
+                'Comparing Integrated Shield Plan premiums in Singapore means opening a PDF from every insurer and reading rate tables side by side. The numbers are public; putting them next to each other is the work. Financial agents do it by hand, for every client.',
+            build:
+                "A comparison tool that holds every insurer's premium table in one schema, so a plan becomes a query instead of a PDF. Consumers get plan comparison, premium mapping against their age band, and a saved profile. Financial agents get a subscription tier, billed through HitPay, that opens up the client-facing views.",
+            runsOn:
+                'Vue 3 and Vuetify on the front. Fastify on Cloud Run behind GCP API Gateway, with Cloud SQL Postgres holding the premium data and Firebase handling auth.',
+            caveat:
+                'Insurers revise their premium tables and nothing warns you. The hard part of this project was never the interface — it was keeping the data honest. That is still where most of the work goes.',
+            description: "Premium comparison for Singapore's Integrated Shield Plan market.",
+            image: compareipShot,
+            // Order matters: the hero rate row shows the first three.
+            technologies: ['Vue 3', 'Fastify', 'Cloud Run', 'Cloud SQL', 'PostgreSQL', 'API Gateway', 'Firebase', 'HitPay', 'Vuetify 3'],
             liveUrl: 'https://compareip.sg/',
             githubUrl: null,
         },
         {
             id: 2,
+            tier: 'foundation',
             title: 'Meals on Wheels',
-            description: 'Online ordering system for MerryMeal, a charitable organization that prepares and delivers hot noon meals to adults living at home who are unable to cook for themselves, maintain their nutritional status due to age, disease, or disability.',
-            image: 'https://qufettbgvupjvbpzmafs.supabase.co/storage/v1/object/public/portfolio-assets/projects/meals-on-wheels.png',
+            tagline: 'Ordering system for a charity that delivers hot meals to people who cannot cook for themselves.',
+            caveat: COURSEWORK_CAVEAT,
+            description: 'Online ordering system for MerryMeal, a charity that prepares and delivers hot noon meals to adults who cannot cook for themselves.',
+            image: `${IMG}/meals-on-wheels.png`,
             technologies: ['Spring Boot', 'MySQL', 'Java'],
             liveUrl: null,
             githubUrl: 'https://github.com/BDSE-0922-Group/DEA-SA',
         },
         {
             id: 3,
+            tier: 'foundation',
             title: 'Know Your Neighborhood',
-            description: 'Community website that provides users with information about stores in their neighborhood. The frontend is developed using React JS and connected to the back-end using Axios with a custom REST API.',
-            image: 'https://qufettbgvupjvbpzmafs.supabase.co/storage/v1/object/public/portfolio-assets/projects/know-your-neighborhood.png',
+            tagline: 'Directory of neighbourhood stores. React front end over a custom REST API.',
+            caveat: COURSEWORK_CAVEAT,
+            description: 'Community site listing stores in your neighbourhood. React front end talking to a custom REST API over Axios.',
+            image: `${IMG}/know-your-neighborhood.png`,
             technologies: ['React', 'REST API', 'Axios'],
             liveUrl: null,
             githubUrl: 'https://github.com/HenryPoliquit/KnowYourNeigborhood',
         },
         {
             id: 4,
+            tier: 'foundation',
             title: 'ABC Job Portal',
-            description: 'Job-hunting platform similar to LinkedIn. Users can sign up, login, change their password, and edit their profiles. Administrators can also manage users and their information.',
-            image: 'https://qufettbgvupjvbpzmafs.supabase.co/storage/v1/object/public/portfolio-assets/projects/abc-job-portal.png',
+            tagline: 'Job board with accounts, profiles, and admin user management.',
+            caveat: COURSEWORK_CAVEAT,
+            description: 'Job board. Users sign up, manage a profile and change their password; administrators manage the users.',
+            image: `${IMG}/abc-job-portal.png`,
             technologies: ['Spring MVC', 'MySQL', 'Java'],
             liveUrl: null,
             githubUrl: 'https://github.com/HenryPoliquit/ABCJobPortal',
         },
         {
             id: 5,
+            tier: 'foundation',
             title: 'ABC Car Portal',
-            description: 'Used-car sales website where users can create accounts and post their cars for sale. Other users can book cars for test drives or place bids. Administrators approve bids and manage booking dates.',
-            image: 'https://qufettbgvupjvbpzmafs.supabase.co/storage/v1/object/public/portfolio-assets/projects/abc-car-portal.png',
+            tagline: 'Used-car listings with test-drive bookings and a bid-approval flow.',
+            caveat: COURSEWORK_CAVEAT,
+            description: 'Used-car marketplace. Sellers post cars, buyers book test drives or bid, administrators approve bids and manage dates.',
+            image: `${IMG}/abc-car-portal.png`,
             technologies: ['Spring Framework', 'MySQL', 'Java'],
             liveUrl: null,
             githubUrl: 'https://github.com/HenryPoliquit/ABCCarPortal',
@@ -130,14 +130,9 @@ export const usePortfolioStore = defineStore('portfolio', () => {
         updatedAt: null,
     })
 
-    const techCount = computed(() => new Set(projects.value.flatMap(p => p.technologies)).size)
-
-    const stats = computed(() => [
-        { number: `${projects.value.length}+`, label: 'Projects' },
-        { number: `${techCount.value}+`, label: 'Technologies' },
-        { number: `${yearsLearning.value}+`, label: 'Years Learning' },
-        { number: '1', label: 'Production App' },
-    ])
+    // The site is tiered: one thing in production, everything else is foundations.
+    const production = computed(() => projects.value.find(p => p.tier === 'production') ?? null)
+    const foundations = computed(() => projects.value.filter(p => p.tier !== 'production'))
 
     // ──────────────────────────────────────────────────────────────
     // Image preload — keeping the Image objects alive prevents GC so
@@ -165,40 +160,66 @@ export const usePortfolioStore = defineStore('portfolio', () => {
         if (loading.value) return
         loading.value = true
 
-        const [profileRes, projectsRes, skillsRes, featuresRes, nowRes] = await Promise.allSettled([
+        const [profileRes, projectsRes, skillsRes, nowRes] = await Promise.allSettled([
             supabase.from('profile').select('*').limit(1).maybeSingle(),
             supabase.from('projects').select('*').order('sort_order'),
             supabase.from('skills').select('*').order('sort_order'),
-            supabase.from('features').select('*').order('sort_order'),
             supabase.from('now_status').select('*').order('updated_at', { ascending: false }).limit(1).maybeSingle(),
         ])
 
         const ok = (r) => r.status === 'fulfilled' && !r.value.error && r.value.data
 
+        // The CMS fills gaps, it never empties them. A row that is missing a
+        // column (migration not run) or has it null must not wipe the default —
+        // otherwise a *successful* thin response degrades the site, which is the
+        // one failure the fallbacks exist to prevent.
+        const pick = (value, fallback) =>
+            value === null || value === undefined || value === '' ? fallback : value
+
         if (ok(profileRes)) {
             const p = profileRes.value.data
+            const d = personal.value
             personal.value = {
-                name: p.name,
-                title: p.title,
-                bio: p.bio,
-                avatarUrl: p.avatar_url ?? personal.value.avatarUrl,
-                email: p.email,
-                phone: p.phone,
-                location: p.location,
-                available: p.available,
+                name: pick(p.name, d.name),
+                title: pick(p.title, d.title),
+                tagline: pick(p.tagline, d.tagline),
+                bio: pick(p.bio, d.bio),
+                avatarUrl: pick(p.avatar_url, d.avatarUrl),
+                email: pick(p.email, d.email),
+                phone: pick(p.phone, d.phone),
+                location: pick(p.location, d.location),
+                available: p.available ?? d.available,
             }
         }
 
         if (ok(projectsRes) && projectsRes.value.data.length) {
-            projects.value = projectsRes.value.data.map(p => ({
-                id: p.id,
-                title: p.title,
-                description: p.description,
-                image: p.image_url,
-                technologies: p.technologies ?? [],
-                liveUrl: p.live_url,
-                githubUrl: p.github_url,
-            }))
+            // Matched by title, the same key the migration uses, so a row keeps
+            // its case-study copy even before 001_rate_card.sql has been run.
+            const defaults = new Map(projects.value.map(p => [p.title, p]))
+
+            projects.value = projectsRes.value.data.map(p => {
+                const d = defaults.get(p.title) ?? {}
+                return {
+                    id: p.id,
+                    tier: pick(p.tier, d.tier ?? 'foundation'),
+                    title: p.title,
+                    tagline: pick(p.tagline, d.tagline ?? p.description),
+                    market: pick(p.market, d.market),
+                    since: pick(p.since, d.since),
+                    problem: pick(p.problem, d.problem),
+                    build: pick(p.build, d.build),
+                    runsOn: pick(p.runs_on, d.runsOn),
+                    caveat: pick(p.caveat, d.caveat),
+                    description: pick(p.description, d.description),
+                    // Images invert the rule above: a bundled shot wins over the CMS.
+                    // Screenshots are versioned with the build (hashed, cached, never
+                    // 404), so `image_url` only supplies projects the build has none for.
+                    image: d.image ?? pick(p.image_url, null),
+                    technologies: p.technologies?.length ? p.technologies : (d.technologies ?? []),
+                    liveUrl: pick(p.live_url, d.liveUrl),
+                    githubUrl: pick(p.github_url, d.githubUrl),
+                }
+            })
             preloadImages(projects.value.map(p => p.image))
         }
 
@@ -208,15 +229,6 @@ export const usePortfolioStore = defineStore('portfolio', () => {
                 if (grouped[s.category]) grouped[s.category].push(s.name)
             })
             skills.value = grouped
-        }
-
-        if (ok(featuresRes) && featuresRes.value.data.length) {
-            features.value = featuresRes.value.data.map(f => ({
-                title: f.title,
-                description: f.description,
-                icon: f.icon,
-                color: f.color,
-            }))
         }
 
         if (ok(nowRes)) {
@@ -256,18 +268,19 @@ export const usePortfolioStore = defineStore('portfolio', () => {
             .subscribe()
     }
 
+    // `icon` holds an SVG path from @mdi/js, or null for a text-only message.
     const snackbar = reactive({
         show: false,
         message: '',
         color: 'success',
-        icon: 'mdi-check-circle',
+        icon: null,
     })
 
     function showSnackbar(message, color = 'success', icon = null) {
         snackbar.show = true
         snackbar.message = message
         snackbar.color = color
-        snackbar.icon = icon ?? (color === 'success' ? 'mdi-check-circle' : 'mdi-alert-circle')
+        snackbar.icon = icon
     }
 
     function hideSnackbar() {
@@ -278,10 +291,10 @@ export const usePortfolioStore = defineStore('portfolio', () => {
         personal,
         navItems,
         socialLinks,
-        stats,
-        features,
         skills,
         projects,
+        production,
+        foundations,
         now,
         loaded,
         loading,
