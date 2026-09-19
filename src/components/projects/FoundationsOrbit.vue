@@ -10,20 +10,30 @@
                 class="orbit-static"
             >
                 <article v-for="p in items" :key="p.id" class="card">
-                    <h3 class="card-title">
-                        {{ p.title }}<span class="mark" aria-hidden="true">&nbsp;&Dagger;</span>
-                    </h3>
-                    <p class="card-tagline">{{ p.tagline }}</p>
-                    <p class="card-stack fig">{{ p.technologies.join(' · ') }}</p>
-                    <p class="card-link fig">
-                        <a
-                            v-if="linkOf(p)"
-                            :href="linkOf(p).href"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >{{ linkOf(p).label }}<span aria-hidden="true">&nbsp;&#8599;</span></a>
-                        <span v-else class="card-nolink">&mdash;</span>
-                    </p>
+                    <img
+                        v-if="p.image"
+                        class="card-shot"
+                        :src="p.image"
+                        :alt="`Screenshot of ${p.title}`"
+                        loading="lazy"
+                        decoding="async"
+                    />
+                    <div class="card-body">
+                        <h3 class="card-title">
+                            {{ p.title }}<span class="mark" aria-hidden="true">&nbsp;&Dagger;</span>
+                        </h3>
+                        <p class="card-tagline">{{ p.tagline }}</p>
+                        <p class="card-stack fig">{{ p.technologies.join(' · ') }}</p>
+                        <p class="card-link fig">
+                            <a
+                                v-if="linkOf(p)"
+                                :href="linkOf(p).href"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >{{ linkOf(p).label }}<span aria-hidden="true">&nbsp;&#8599;</span></a>
+                            <span v-else class="card-nolink">&mdash;</span>
+                        </p>
+                    </div>
                 </article>
             </div>
 
@@ -49,23 +59,32 @@
                             class="card card--3d"
                             :style="cardStyle(i)"
                         >
-                            <h3 class="card-title">
-                                {{ p.title }}<span class="mark" aria-hidden="true">&nbsp;&Dagger;</span>
-                            </h3>
-                            <p class="card-tagline">{{ p.tagline }}</p>
-                            <p class="card-stack fig">{{ p.technologies.join(' · ') }}</p>
-                            <p class="card-link fig">
-                                <a
-                                    v-if="linkOf(p)"
-                                    :href="linkOf(p).href"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    :data-index="i"
-                                    @click="onLinkClick"
-                                    @focus="faceCard(i)"
-                                >{{ linkOf(p).label }}<span aria-hidden="true">&nbsp;&#8599;</span></a>
-                                <span v-else class="card-nolink">&mdash;</span>
-                            </p>
+                            <img
+                                v-if="p.image"
+                                class="card-shot"
+                                :src="p.image"
+                                :alt="`Screenshot of ${p.title}`"
+                                decoding="async"
+                            />
+                            <div class="card-body">
+                                <h3 class="card-title">
+                                    {{ p.title }}<span class="mark" aria-hidden="true">&nbsp;&Dagger;</span>
+                                </h3>
+                                <p class="card-tagline">{{ p.tagline }}</p>
+                                <p class="card-stack fig">{{ p.technologies.join(' · ') }}</p>
+                                <p class="card-link fig">
+                                    <a
+                                        v-if="linkOf(p)"
+                                        :href="linkOf(p).href"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        :data-index="i"
+                                        @click="onLinkClick"
+                                        @focus="faceCard(i)"
+                                    >{{ linkOf(p).label }}<span aria-hidden="true">&nbsp;&#8599;</span></a>
+                                    <span v-else class="card-nolink">&mdash;</span>
+                                </p>
+                            </div>
                         </article>
                     </div>
                 </div>
@@ -104,8 +123,8 @@ function linkOf(p) {
 // it - deriving from 250 on a phone whose cards are 210 puts the neighbours
 // further out than the stage can show.
 const narrow = ref(false)
-const cardW = computed(() => (narrow.value ? 210 : 250))
-const gap = computed(() => (narrow.value ? 55 : 90))
+const cardW = computed(() => (narrow.value ? 260 : 330))
+const gap = computed(() => (narrow.value ? 50 : 90))
 
 const step = computed(() => 360 / Math.max(items.value.length, 1))
 const radius = computed(() => {
@@ -118,12 +137,27 @@ const ringStyle = computed(() => ({
     transform: `translateZ(-${radius.value}px) rotateY(${angle.value}deg)`,
 }))
 
+// Cards are turned back toward the viewer by this much of their own angle.
+// At 0 they sit tangent to the ring and a neighbour 90deg away is edge-on -
+// invisible, which makes four cards read as one. At 0.5 that neighbour is
+// only turned 45deg, so it stays legible and the ring reads as a ring.
+const COUNTER_TURN = 0.5
+
 function cardStyle(i) {
-    // How far this card is turned away from the viewer, 0 = facing us.
-    const facing = ((angle.value + i * step.value) % 360 + 360) % 360
+    const placed = i * step.value
+    // Live angle, not the placed one: the counter-turn has to follow the card
+    // around the ring, or a card arriving at the front is still turned away.
+    const turned = angle.value + placed
+    const facing = (turned % 360 + 360) % 360
+    // Wrapped to [-180, 180). The raw angle grows without bound, so counter-
+    // turning by a fraction of it would flip the front card after one full
+    // revolution. The seam lands at 180deg, where the card is edge-on anyway.
+    const signed = facing >= 180 ? facing - 360 : facing
     const depth = (Math.cos((facing * Math.PI) / 180) + 1) / 2 // 1 front, 0 back
     return {
-        transform: `rotateY(${i * step.value}deg) translateZ(${radius.value}px)`,
+        transform:
+            `rotateY(${placed}deg) translateZ(${radius.value}px) ` +
+            `rotateY(${(-signed * COUNTER_TURN).toFixed(2)}deg)`,
         opacity: (0.22 + 0.78 * depth).toFixed(3),
         // Cards turned away must not swallow clicks meant for the front one.
         pointerEvents: depth > 0.55 ? 'auto' : 'none',
@@ -248,12 +282,26 @@ onBeforeUnmount(() => {
 <style scoped>
 /* -- The card, shared by both presentations ----------------------------- */
 .card {
-    width: 250px;
+    width: 330px;
     box-sizing: border-box;
-    padding: 18px 20px 16px;
     background: rgb(var(--v-theme-surface));
     border: var(--rule);
     border-radius: var(--radius-card);
+    overflow: hidden;
+}
+
+/* The screenshots are all 480x270, so one fixed ratio holds every card to the
+   same height and reserves the space before the image decodes. */
+.card-shot {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-bottom: var(--rule);
+}
+
+.card-body {
+    padding: 16px 20px 16px;
 }
 
 .card-title {
@@ -321,14 +369,14 @@ onBeforeUnmount(() => {
        a full-width stage puts the mask far outside the cards, where it has
        nothing to fade. */
     width: 100%;
-    /* The swing is card + 2r wide (250 + 340), so anything past ~620px is
+    /* The swing is card + 2r wide (330 + 420), so anything past ~770px is
        dead space the mask never reaches. */
-    max-width: 620px;
+    max-width: 770px;
     /* Left, not centred: every other element in a band hangs off the same
        left rule, and a centred island under a left-aligned label reads as
        detached from the document. */
     margin-inline: 0;
-    height: 315px;
+    height: 440px;
     perspective: 1150px;
     /* Horizontal drag is ours; vertical scroll stays the page's. */
     touch-action: pan-y;
@@ -346,8 +394,8 @@ onBeforeUnmount(() => {
     position: absolute;
     inset: 0;
     margin: auto;
-    width: 250px;
-    height: 235px;
+    width: 330px;
+    height: 372px;
     transform-style: preserve-3d;
 }
 
@@ -384,9 +432,9 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 600px) {
-    .card { width: 210px; }
-    .orbit-ring { width: 210px; height: 250px; }
-    /* Swing is 210 + 2r (r = 135), so the stage is sized to match. */
-    .orbit-stage { height: 330px; max-width: 480px; }
+    .card { width: 260px; }
+    .orbit-ring { width: 260px; height: 330px; }
+    /* Swing is 260 + 2r (r = 155), so the stage is sized to match. */
+    .orbit-stage { height: 395px; max-width: 570px; }
 }
 </style>

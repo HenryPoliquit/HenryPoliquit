@@ -2,9 +2,14 @@ import { ref, reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { supabase } from '../lib/supabase'
 
-// Bundled, not fetched. This is the only proof the site rests on, so it ships
-// in the build and cannot 404 when the backend is paused, moved or deleted.
+// Bundled, not fetched. Screenshots ship in the build and cannot 404 when the
+// backend is paused, moved or deleted - which it was, taking every project
+// image with it. Hashed by Vite, so they cache forever.
 import compareipShot from '../assets/images/compareip.webp'
+import mealsShot from '../assets/images/meals-on-wheels.webp'
+import neighborhoodShot from '../assets/images/know-your-neighborhood.webp'
+import jobPortalShot from '../assets/images/abc-job-portal.webp'
+import carPortalShot from '../assets/images/abc-car-portal.webp'
 
 export const usePortfolioStore = defineStore('portfolio', () => {
     // ──────────────────────────────────────────────────────────────
@@ -49,7 +54,6 @@ export const usePortfolioStore = defineStore('portfolio', () => {
     })
 
     const COURSEWORK_CAVEAT = 'Coursework, built to a brief at Lithan EduClaaS.'
-    const IMG = 'https://qufettbgvupjvbpzmafs.supabase.co/storage/v1/object/public/portfolio-assets/projects'
 
     const projects = ref([
         {
@@ -81,7 +85,7 @@ export const usePortfolioStore = defineStore('portfolio', () => {
             tagline: 'Ordering system for a charity that delivers hot meals to people who cannot cook for themselves.',
             caveat: COURSEWORK_CAVEAT,
             description: 'Online ordering system for MerryMeal, a charity that prepares and delivers hot noon meals to adults who cannot cook for themselves.',
-            image: `${IMG}/meals-on-wheels.png`,
+            image: mealsShot,
             technologies: ['Spring Boot', 'MySQL', 'Java'],
             liveUrl: null,
             githubUrl: 'https://github.com/BDSE-0922-Group/DEA-SA',
@@ -93,7 +97,7 @@ export const usePortfolioStore = defineStore('portfolio', () => {
             tagline: 'Directory of neighbourhood stores. React front end over a custom REST API.',
             caveat: COURSEWORK_CAVEAT,
             description: 'Community site listing stores in your neighbourhood. React front end talking to a custom REST API over Axios.',
-            image: `${IMG}/know-your-neighborhood.png`,
+            image: neighborhoodShot,
             technologies: ['React', 'REST API', 'Axios'],
             liveUrl: null,
             githubUrl: 'https://github.com/HenryPoliquit/KnowYourNeigborhood',
@@ -105,7 +109,7 @@ export const usePortfolioStore = defineStore('portfolio', () => {
             tagline: 'Job board with accounts, profiles, and admin user management.',
             caveat: COURSEWORK_CAVEAT,
             description: 'Job board. Users sign up, manage a profile and change their password; administrators manage the users.',
-            image: `${IMG}/abc-job-portal.png`,
+            image: jobPortalShot,
             technologies: ['Spring MVC', 'MySQL', 'Java'],
             liveUrl: null,
             githubUrl: 'https://github.com/HenryPoliquit/ABCJobPortal',
@@ -117,7 +121,7 @@ export const usePortfolioStore = defineStore('portfolio', () => {
             tagline: 'Used-car listings with test-drive bookings and a bid-approval flow.',
             caveat: COURSEWORK_CAVEAT,
             description: 'Used-car marketplace. Sellers post cars, buyers book test drives or bid, administrators approve bids and manage dates.',
-            image: `${IMG}/abc-car-portal.png`,
+            image: carPortalShot,
             technologies: ['Spring Framework', 'MySQL', 'Java'],
             liveUrl: null,
             githubUrl: 'https://github.com/HenryPoliquit/ABCCarPortal',
